@@ -1,0 +1,18 @@
+# requirements.in
+setuptools
+grpcio-tools
+grpcio
+protobuf
+six
+redis
+pyyaml
+sentry-sdk
+urllib3
+certifi
+snowflake
+prometheus_client
+redis-collections
+redis-lock
+jsonpickle
+netifaces
+scapy

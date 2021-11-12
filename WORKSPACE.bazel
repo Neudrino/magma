@@ -20,18 +20,6 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_python/releases/download/0.5.0/rules_python-0.5.0.tar.gz",
 )
 
-load("@rules_python//python:pip.bzl", "pip_install", "pip_parse")
-
-pip_parse(
-    name = "pip3",
-    requirements_lock = "//experimental/bazel-base:requirements.txt",
-    extra_pip_args = ["--require-hashes"],
-)
-
-load("@pip3//:requirements.bzl", "install_deps")
-
-install_deps()
-
 ### BUILDIFIER DEPENDENCIES
 # See https://github.com/bazelbuild/buildtools/blob/master/buildifier/README.md
 # buildifier is written in Go and hence needs rules_go to be built.
@@ -158,3 +146,56 @@ git_repository(
     remote = "https://github.com/google/subpar",
     tag = "2.0.0",
 )
+
+# Bazel-based Python Interpreter Installation
+PY_VERSION = "3.8.5"
+
+BUILD_DIR = "/tmp/bazel/external/python_{0}".format(PY_VERSION)
+
+_py_configure = """
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    cd {0} && ./configure --prefix={0}/bazel_install --with-openssl=$(brew --prefix openssl)
+else
+    cd {0} && ./configure --prefix={0}/bazel_install
+fi
+""".format(BUILD_DIR)
+
+http_archive(
+    name = "python_interpreter",
+    build_file_content = """
+exports_files(["python_bin"])
+filegroup(
+    name = "files",
+    srcs = glob(["bazel_install/**"], exclude = ["**/* *"]),
+    visibility = ["//visibility:public"],
+)
+""",
+    patch_cmds = [
+        "mkdir -p {0}".format(BUILD_DIR),
+        "cp -r * {0}".format(BUILD_DIR),
+        _py_configure,
+        "cd {0} && make install".format(BUILD_DIR),
+        "rm -rf * && mv {0}/* .".format(BUILD_DIR),
+        "ln -s bazel_install/bin/python3 python_bin",
+    ],
+    sha256 = "e3003ed57db17e617acb382b0cade29a248c6026b1bd8aad1f976e9af66a83b0",
+    strip_prefix = "Python-{0}".format(PY_VERSION),
+    urls = ["https://www.python.org/ftp/python/{0}/Python-{0}.tar.xz".format(PY_VERSION)],
+)
+
+register_toolchains("//lte/gateway/python/magma/mobilityd:py_toolchain")
+
+
+# Provide Python dependency Loading via Bazel
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
+    name = "python_deps",
+    python_interpreter_target = "@python_interpreter//:python_bin",
+    # extra_pip_args = ["--require-hashes"],
+    requirements_lock = "//lte/gateway/python/magma/mobilityd:requirements.txt",
+)
+
+load("@python_deps//:requirements.bzl", "install_deps")
+
+install_deps()

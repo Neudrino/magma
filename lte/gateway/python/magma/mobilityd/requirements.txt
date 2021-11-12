@@ -1,0 +1,17 @@
+setuptools==49.6.0
+grpcio-tools>=1.16.1
+grpcio>=1.5.0
+redis==3.5.3
+protobuf
+six
+pyyaml
+urllib3
+certifi
+sentry-sdk
+snowflake
+prometheus_client
+redis-collections
+redis-lock
+jsonpickle
+netifaces
+scapy
