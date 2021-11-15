@@ -48,7 +48,6 @@ RUN echo "Install general purpose packages" && \
         build-essential \
         ca-certificates \
         clang-11 \
-        clang-format-7 \
         clang-format-11 \
         clang-tidy-11 \
         curl \
