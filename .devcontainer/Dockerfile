@@ -37,7 +37,7 @@ ENV C_BUILD=/workspaces/magma/build/c
 ENV DEBIAN_FRONTEND=noninteractive
 
 ##### Set Python Path
-ENV PYTHONPATH=$MAGMA_ROOT/lte/gatway/python:$MAGMA_ROOT/orc8r/gatway/python
+ENV PYTHONPATH=$MAGMA_ROOT/lte/gateway/python:$MAGMA_ROOT/orc8r/gateway/python
 
 RUN ln -s $MAGMA_ROOT/bazel/bazelrcs/devcontainer.bazelrc /etc/bazelrc
 
