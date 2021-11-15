@@ -1,4 +1,4 @@
-# Note: You can use any Debian/Ubuntu based image you want. 
+# Note: You can use any Debian/Ubuntu based image you want.
 FROM ubuntu:focal as magma-mme-builder
 
 # [Option] Install zsh
@@ -23,8 +23,8 @@ RUN apt-get update \
     # Clean up
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
-# Setting the ENTRYPOINT to docker-init.sh will configure non-root access to 
-# the Docker socket if "overrideCommand": false is set in devcontainer.json. 
+# Setting the ENTRYPOINT to docker-init.sh will configure non-root access to
+# the Docker socket if "overrideCommand": false is set in devcontainer.json.
 # The script will also execute CMD if you need to alter startup behaviors.
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
 CMD [ "sleep", "infinity" ]
@@ -251,7 +251,7 @@ RUN git clone https://github.com/facebook/folly && cd folly && \
     make install && \
     cd / && \
     rm -rf folly
-    
+
 ##### Build and install libgtest and gmock
 RUN cd /usr/src/googletest && \
     mkdir build && \
@@ -313,9 +313,12 @@ RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git 
 ##### Go language server support for vscode
 RUN go get -v golang.org/x/tools/gopls
 
-#### Update shared library configuration
+##### Update shared library configuration
 RUN ldconfig -v
 
-RUN ln -s "$MAGMA_ROOT"/magma/bazel/bazelrcs/devcontainer.bazelrc /etc/bazelrc
+##### Set Python Path
+ENV PYTHONPATH=$MAGMA_ROOT/lte/gatway/python:$MAGMA_ROOT/orc8r/gatway/python
+
+RUN ln -s $MAGMA_ROOT/bazel/bazelrcs/devcontainer.bazelrc /etc/bazelrc
 
 WORKDIR $MAGMA_ROOT
