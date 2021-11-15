@@ -292,13 +292,13 @@ RUN git clone https://github.com/include-what-you-use/include-what-you-use && \
     rm -rf build_liwyu
 
 #### libfluid is requird to build MME with OVS support
-COPY third_party /tmp/third_party/
+COPY ../third_party /tmp/third_party/
 RUN /tmp/third_party/build/bin/libfluid_build.sh && \
      find . -name magma-libfluid_0.1* -exec dpkg -i {} \; && \
      rm -rf /tmp/*
 
 ##### FreeDiameter
-COPY lte/gateway/c/core/oai/patches/ /tmp/
+COPY ../lte/gateway/c/core/oai/patches/ /tmp/
 RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git freediameter && \
     cd freediameter && \
     patch -p1 < /tmp/0001-opencoord.org.freeDiameter.patch && \
