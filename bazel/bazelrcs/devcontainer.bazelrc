@@ -1,1 +1,2 @@
 common --config=devcontainer
+build --define=folly_so=1
