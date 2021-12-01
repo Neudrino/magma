@@ -125,17 +125,17 @@ RUN /tmp/third_party/build/bin/libfluid_build.sh && \
      rm -rf /tmp/*
 
 ##### FreeDiameter
-COPY lte/gateway/c/core/oai/patches/ /tmp/
-RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git freediameter && \
-    cd freediameter && \
-    patch -p1 < /tmp/0001-opencoord.org.freeDiameter.patch && \
-    mkdir build && \
-    cd build && \
-    cmake -DDISABLE_SCTP:BOOL=ON ../ && \
-    make -j"$(nproc)" && \
-    make install && \
-    cd / && \
-    rm -rf freediameter
+#COPY lte/gateway/c/core/oai/patches/ /tmp/
+#RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git freediameter && \
+#    cd freediameter && \
+#    patch -p1 < /tmp/0001-opencoord.org.freeDiameter.patch && \
+#    mkdir build && \
+#    cd build && \
+#    cmake -DDISABLE_SCTP:BOOL=ON ../ && \
+#    make -j"$(nproc)" && \
+#    make install && \
+#    cd / && \
+#    rm -rf freediameter
 
 # Install bazel
 WORKDIR /usr/sbin
