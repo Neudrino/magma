@@ -16,6 +16,7 @@ ARG USERNAME=automatic
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 COPY library-scripts/*.sh /tmp/library-scripts/
+
 RUN apt-get update \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" \
     # Use Docker script from script library to set things up
@@ -78,21 +79,15 @@ RUN echo "Install general purpose packages" && \
         tzdata \
         unzip \
         vim \
-        wget && \
-        gem install fpm && \
+        wget
+    
+RUN gem install fpm && \
         update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-11/bin/clang 10 && \
         update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-11/bin/clang++ 10 && \
-        update-alternatives --install /usr/bin/clang-format clang-format /usr/lib/llvm-7/bin/clang-format 10 && \
         update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/lib/llvm-11/bin/clang-tidy 10 && \
         update-alternatives --install /usr/bin/clang-apply-replacements clang-apply-replacements /usr/lib/llvm-11/bin/clang-apply-replacements 10
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y clangd-12
-
-# Install bazel
-WORKDIR /usr/sbin
-RUN wget --progress=dot:giga https://github.com/bazelbuild/bazelisk/releases/download/v1.10.0/bazelisk-linux-amd64 && \
-    chmod +x bazelisk-linux-amd64 && \
-    ln -s /usr/sbin/bazelisk-linux-amd64 /usr/sbin/bazel
 
 RUN echo "Install 3rd party dependencies" && \
     apt-get update && \
@@ -122,6 +117,31 @@ RUN echo "Install 3rd party dependencies" && \
     apt-get install -y libcurl4-openssl-dev
 
 RUN ["/bin/bash", "-c", "if [[ -v GIT_PROXY ]]; then git config --global http.proxy $GIT_PROXY; fi"]
+
+#### libfluid is requird to build MME with OVS support
+COPY ../third_party /tmp/third_party/
+RUN /tmp/third_party/build/bin/libfluid_build.sh && \
+     find . -name magma-libfluid_0.1* -exec dpkg -i {} \; && \
+     rm -rf /tmp/*
+
+##### FreeDiameter
+COPY ../lte/gateway/c/core/oai/patches/ /tmp/
+RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git freediameter && \
+    cd freediameter && \
+    patch -p1 < /tmp/0001-opencoord.org.freeDiameter.patch && \
+    mkdir build && \
+    cd build && \
+    cmake -DDISABLE_SCTP:BOOL=ON ../ && \
+    make -j"$(nproc)" && \
+    make install && \
+    cd / && \
+    rm -rf freediameter
+
+# Install bazel
+WORKDIR /usr/sbin
+RUN wget --progress=dot:giga https://github.com/bazelbuild/bazelisk/releases/download/v1.10.0/bazelisk-linux-amd64 && \
+    chmod +x bazelisk-linux-amd64 && \
+    ln -s /usr/sbin/bazelisk-linux-amd64 /usr/sbin/bazel
 
 ##### NETTLE and GNUTLS
 # TODO Upgrade these - requires us to update our use of libnettle due to API migration.
@@ -289,25 +309,6 @@ RUN git clone https://github.com/include-what-you-use/include-what-you-use && \
     cd / && \
     rm -rf include-what-you-use && \
     rm -rf build_liwyu
-
-#### libfluid is requird to build MME with OVS support
-COPY ../third_party /tmp/third_party/
-RUN /tmp/third_party/build/bin/libfluid_build.sh && \
-     find . -name magma-libfluid_0.1* -exec dpkg -i {} \; && \
-     rm -rf /tmp/*
-
-##### FreeDiameter
-COPY ../lte/gateway/c/core/oai/patches/ /tmp/
-RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git freediameter && \
-    cd freediameter && \
-    patch -p1 < /tmp/0001-opencoord.org.freeDiameter.patch && \
-    mkdir build && \
-    cd build && \
-    cmake -DDISABLE_SCTP:BOOL=ON ../ && \
-    make -j"$(nproc)" && \
-    make install && \
-    cd / && \
-    rm -rf freediameter
 
 ##### Go language server support for vscode
 RUN go get -v golang.org/x/tools/gopls
