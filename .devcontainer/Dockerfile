@@ -15,7 +15,7 @@ ARG USE_MOBY="true"
 ARG USERNAME=automatic
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-COPY library-scripts/*.sh /tmp/library-scripts/
+COPY .devcontainer/library-scripts/*.sh /tmp/library-scripts/
 
 RUN apt-get update \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" \
@@ -119,13 +119,13 @@ RUN echo "Install 3rd party dependencies" && \
 RUN ["/bin/bash", "-c", "if [[ -v GIT_PROXY ]]; then git config --global http.proxy $GIT_PROXY; fi"]
 
 #### libfluid is requird to build MME with OVS support
-COPY ../third_party /tmp/third_party/
+COPY third_party /tmp/third_party/
 RUN /tmp/third_party/build/bin/libfluid_build.sh && \
      find . -name magma-libfluid_0.1* -exec dpkg -i {} \; && \
      rm -rf /tmp/*
 
 ##### FreeDiameter
-COPY ../lte/gateway/c/core/oai/patches/ /tmp/
+COPY lte/gateway/c/core/oai/patches/ /tmp/
 RUN git clone https://github.com/OPENAIRINTERFACE/opencord.org.freeDiameter.git freediameter && \
     cd freediameter && \
     patch -p1 < /tmp/0001-opencoord.org.freeDiameter.patch && \
