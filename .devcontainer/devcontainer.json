@@ -19,7 +19,10 @@
 		"augustocdias.tasks-shell-input",
 		"ryuta46.multi-command",
 	],
-	"build": { "dockerfile": "Dockerfile" },
+	"build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        },
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"files.watcherExclude": {
