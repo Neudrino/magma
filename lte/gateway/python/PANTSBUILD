@@ -49,3 +49,22 @@ python_requirement(
     name="protobuf",
     requirements=["protobuf==3.19.1"],
 )
+
+
+relocated_files(
+    name="relocated-mobilityd-yml",
+    files_targets=[
+        "lte/gateway/configs:mobilityd-yml",
+        "lte/gateway/configs:gateway-mconfig",
+    ],
+    src="lte/gateway/configs",
+    dest="",
+    #dest="/etc/magma", # absolute path not allowed
+)
+
+archive(
+    name="app_with_config",
+    #packages=[":app"],
+    files=[":relocated-mobilityd-yml"],
+    format="tar.gz",
+)

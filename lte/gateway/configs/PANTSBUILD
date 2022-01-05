@@ -1,0 +1,9 @@
+file(
+    name="mobilityd-yml",
+    source="mobilityd.yml",
+)
+
+file(
+    name="gateway-mconfig",
+    source="gateway.mconfig",
+)
