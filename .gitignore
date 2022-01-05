@@ -109,3 +109,9 @@ bazel-out
 bazel-testlogs
 help
 compile_commands.json
+
+# Pants workspace files
+/.pants.d/
+/dist/
+/.pids
+/.pants.workdir.file_lock*
