@@ -4,3 +4,23 @@ pex_binary(
 )
 
 python_sources()
+
+python_requirement(
+    name="lte-gateway-test",
+    requirements=[
+        "fakeredis==1.6.1",
+        "prometheus-client==0.12.0",
+        "netifaces==0.11.0",
+        "redis-collections==0.9.1",
+        "redis-lock==0.2.0",
+        "jsonpickle==2.0.0",
+    ],
+)
+python_requirement(
+    name="grpcio",
+    requirements=["grpcio==1.41.1"],
+)
+python_requirement(
+    name="protobuf",
+    requirements=["protobuf==3.19.1"],
+)

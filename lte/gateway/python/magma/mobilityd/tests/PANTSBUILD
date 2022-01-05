@@ -7,4 +7,7 @@ python_sources()
 
 python_tests(
     name="tests0",
+    overrides={
+        ("test_dhcp_client.py", "ip_alloc_dhcp_test.py"): {"skip_tests": True},
+    },
 )
