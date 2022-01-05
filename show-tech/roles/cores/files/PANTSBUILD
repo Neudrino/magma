@@ -1,0 +1,6 @@
+python_sources()
+
+pex_binary(
+    name="handle_cores",
+    entry_point="handle_cores.py",
+)

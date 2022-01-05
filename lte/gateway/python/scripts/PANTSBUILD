@@ -1,0 +1,165 @@
+pex_binary(
+    name="agw_health_cli",
+    entry_point="agw_health_cli.py",
+)
+
+pex_binary(
+    name="config_stateless_agw",
+    entry_point="config_stateless_agw.py",
+)
+
+pex_binary(
+    name="cpe_monitoring_cli",
+    entry_point="cpe_monitoring_cli.py",
+)
+
+pex_binary(
+    name="create_oai_certs",
+    entry_point="create_oai_certs.py",
+)
+
+pex_binary(
+    name="dp_probe_cli",
+    entry_point="dp_probe_cli.py",
+)
+
+pex_binary(
+    name="enodebd_cli",
+    entry_point="enodebd_cli.py",
+)
+
+pex_binary(
+    name="fake_user",
+    entry_point="fake_user.py",
+)
+
+pex_binary(
+    name="feg_hello_cli",
+    entry_point="feg_hello_cli.py",
+)
+
+pex_binary(
+    name="generate_dnsd_config",
+    entry_point="generate_dnsd_config.py",
+)
+
+pex_binary(
+    name="generate_oai_config",
+    entry_point="generate_oai_config.py",
+)
+
+pex_binary(
+    name="ha_cli",
+    entry_point="ha_cli.py",
+)
+
+pex_binary(
+    name="hello_cli",
+    entry_point="hello_cli.py",
+)
+
+pex_binary(
+    name="mobility_cli",
+    entry_point="mobility_cli.py",
+)
+
+pex_binary(
+    name="mobility_dhcp_cli",
+    entry_point="mobility_dhcp_cli.py",
+)
+
+pex_binary(
+    name="ocs_cli",
+    entry_point="ocs_cli.py",
+)
+
+pex_binary(
+    name="packet_ryu_cli",
+    entry_point="packet_ryu_cli.py",
+)
+
+pex_binary(
+    name="packet_tracer_cli",
+    entry_point="packet_tracer_cli.py",
+)
+
+pex_binary(
+    name="pcrf_cli",
+    entry_point="pcrf_cli.py",
+)
+
+pex_binary(
+    name="pipelined_cli",
+    entry_point="pipelined_cli.py",
+)
+
+pex_binary(
+    name="policydb_cli",
+    entry_point="policydb_cli.py",
+)
+
+pex_binary(
+    name="s6a_proxy_cli",
+    entry_point="s6a_proxy_cli.py",
+)
+
+pex_binary(
+    name="s6a_service_cli",
+    entry_point="s6a_service_cli.py",
+)
+
+python_sources()
+
+pex_binary(
+    name="session_manager_cli",
+    entry_point="session_manager_cli.py",
+)
+
+pex_binary(
+    name="sgs_cli",
+    entry_point="sgs_cli.py",
+)
+
+pex_binary(
+    name="smf_upf_integration_cli",
+    entry_point="smf_upf_integration_cli.py",
+)
+
+pex_binary(
+    name="sms_cli",
+    entry_point="sms_cli.py",
+)
+
+pex_binary(
+    name="spgw_service_cli",
+    entry_point="spgw_service_cli.py",
+)
+
+pex_binary(
+    name="state_cli",
+    entry_point="state_cli.py",
+)
+
+pex_binary(
+    name="subscriber_cli",
+    entry_point="subscriber_cli.py",
+)
+
+pex_binary(
+    name="test_supi_decrypt_imsi_cli",
+    entry_point="test_supi_decrypt_imsi_cli.py",
+)
+
+pex_binary(
+    name="test_supi_profile_cli",
+    entry_point="test_supi_profile_cli.py",
+)
+
+python_tests(
+    name="tests",
+)
+
+pex_binary(
+    name="user_trace_cli",
+    entry_point="user_trace_cli.py",
+)

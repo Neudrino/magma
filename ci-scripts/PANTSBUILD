@@ -1,0 +1,15 @@
+python_sources()
+
+shell_sources(
+    name="ci-scripts0",
+)
+
+pex_binary(
+    name="firebase_publish",
+    entry_point="firebase_publish.py",
+)
+
+pex_binary(
+    name="generateHtmlReport-OAI-pipeline",
+    entry_point="generateHtmlReport-OAI-pipeline.py",
+)

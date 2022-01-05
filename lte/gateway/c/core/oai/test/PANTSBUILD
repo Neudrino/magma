@@ -1,0 +1,10 @@
+python_sources()
+
+pex_binary(
+    name="test_e2e_mme_startup",
+    entry_point="test_e2e_mme_startup.py",
+)
+
+python_tests(
+    name="tests",
+)

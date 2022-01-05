@@ -1,0 +1,10 @@
+pex_binary(
+    name="c_parser",
+    entry_point="c_parser.py",
+)
+
+python_sources()
+
+shell_sources(
+    name="files0",
+)

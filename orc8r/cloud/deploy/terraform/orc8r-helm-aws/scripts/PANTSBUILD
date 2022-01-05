@@ -1,0 +1,6 @@
+pex_binary(
+    name="create_orc8r_secrets",
+    entry_point="create_orc8r_secrets.py",
+)
+
+python_sources()

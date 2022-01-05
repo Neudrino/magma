@@ -1,0 +1,195 @@
+pex_binary(
+    name="test_access_control",
+    entry_point="test_access_control.py",
+)
+
+pex_binary(
+    name="test_arp",
+    entry_point="test_arp.py",
+)
+
+pex_binary(
+    name="test_arp_non_nat",
+    entry_point="test_arp_non_nat.py",
+)
+
+pex_binary(
+    name="test_check_quota",
+    entry_point="test_check_quota.py",
+)
+
+pex_binary(
+    name="test_classifier",
+    entry_point="test_classifier.py",
+)
+
+pex_binary(
+    name="test_classifier_mme_flow_dl",
+    entry_point="test_classifier_mme_flow_dl.py",
+)
+
+pex_binary(
+    name="test_classifier_traffic",
+    entry_point="test_classifier_traffic.py",
+)
+
+pex_binary(
+    name="test_conntrack",
+    entry_point="test_conntrack.py",
+)
+
+pex_binary(
+    name="test_dpi",
+    entry_point="test_dpi.py",
+)
+
+pex_binary(
+    name="test_encoding",
+    entry_point="test_encoding.py",
+)
+
+pex_binary(
+    name="test_enforcement",
+    entry_point="test_enforcement.py",
+)
+
+pex_binary(
+    name="test_enforcement_5g",
+    entry_point="test_enforcement_5g.py",
+)
+
+pex_binary(
+    name="test_enforcement_stats",
+    entry_point="test_enforcement_stats.py",
+)
+
+pex_binary(
+    name="test_gy",
+    entry_point="test_gy.py",
+)
+
+pex_binary(
+    name="test_he",
+    entry_point="test_he.py",
+)
+
+pex_binary(
+    name="test_imsi_encoding",
+    entry_point="test_imsi_encoding.py",
+)
+
+pex_binary(
+    name="test_inout",
+    entry_point="test_inout.py",
+)
+
+pex_binary(
+    name="test_inout_non_nat",
+    entry_point="test_inout_non_nat.py",
+)
+
+pex_binary(
+    name="test_internal_pkt_ipfix_export",
+    entry_point="test_internal_pkt_ipfix_export.py",
+)
+
+pex_binary(
+    name="test_ipv6_prefix_mapper",
+    entry_point="test_ipv6_prefix_mapper.py",
+)
+
+pex_binary(
+    name="test_ipv6_solicitation",
+    entry_point="test_ipv6_solicitation.py",
+)
+
+pex_binary(
+    name="test_li_mirror",
+    entry_point="test_li_mirror.py",
+)
+
+pex_binary(
+    name="test_ng_servicer_node",
+    entry_point="test_ng_servicer_node.py",
+)
+
+pex_binary(
+    name="test_ng_servicer_session",
+    entry_point="test_ng_servicer_session.py",
+)
+
+pex_binary(
+    name="test_paging",
+    entry_point="test_paging.py",
+)
+
+pex_binary(
+    name="test_pull_stats",
+    entry_point="test_pull_stats.py",
+)
+
+pex_binary(
+    name="test_qos_pyroute2",
+    entry_point="test_qos_pyroute2.py",
+)
+
+pex_binary(
+    name="test_redirect",
+    entry_point="test_redirect.py",
+)
+
+pex_binary(
+    name="test_restart_resilience",
+    entry_point="test_restart_resilience.py",
+)
+
+pex_binary(
+    name="test_rpc_servicer",
+    entry_point="test_rpc_servicer.py",
+)
+
+pex_binary(
+    name="test_rule_mappers",
+    entry_point="test_rule_mappers.py",
+)
+
+pex_binary(
+    name="test_service_manager",
+    entry_point="test_service_manager.py",
+)
+
+pex_binary(
+    name="test_tunnel_id_mapper",
+    entry_point="test_tunnel_id_mapper.py",
+)
+
+pex_binary(
+    name="test_tunnel_learn",
+    entry_point="test_tunnel_learn.py",
+)
+
+pex_binary(
+    name="test_ue_mac",
+    entry_point="test_ue_mac.py",
+)
+
+pex_binary(
+    name="test_ue_passthrough",
+    entry_point="test_ue_passthrough.py",
+)
+
+pex_binary(
+    name="test_uplink_bridge",
+    entry_point="test_uplink_bridge.py",
+)
+
+pex_binary(
+    name="test_vlan_learn",
+    entry_point="test_vlan_learn.py",
+)
+
+python_sources()
+
+python_tests(
+    name="tests0",
+)

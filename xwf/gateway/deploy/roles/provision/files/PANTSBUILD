@@ -1,0 +1,6 @@
+python_sources()
+
+pex_binary(
+    name="xwfm_provision",
+    entry_point="xwfm_provision.py",
+)

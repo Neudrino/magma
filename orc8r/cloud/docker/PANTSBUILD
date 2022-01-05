@@ -1,0 +1,15 @@
+pex_binary(
+    name="build",
+    entry_point="build.py",
+)
+
+python_sources()
+
+shell_sources(
+    name="docker0",
+)
+
+pex_binary(
+    name="run",
+    entry_point="run.py",
+)

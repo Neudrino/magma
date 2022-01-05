@@ -1,0 +1,16 @@
+pex_binary(
+    name="processor_tests",
+    entry_point="processor_tests.py",
+)
+
+pex_binary(
+    name="rpc_tests",
+    entry_point="rpc_tests.py",
+)
+
+pex_binary(
+    name="sid_utils_tests",
+    entry_point="sid_utils_tests.py",
+)
+
+python_sources()

@@ -1,0 +1,30 @@
+pex_binary(
+    name="collector_tests",
+    entry_point="collector_tests.py",
+)
+
+pex_binary(
+    name="dummy_service",
+    entry_point="dummy_service.py",
+)
+
+pex_binary(
+    name="proxy_client_tests",
+    entry_point="proxy_client_tests.py",
+)
+
+pex_binary(
+    name="service_poller_tests",
+    entry_point="service_poller_tests.py",
+)
+
+pex_binary(
+    name="sync_rpc_client_tests",
+    entry_point="sync_rpc_client_tests.py",
+)
+
+python_sources()
+
+python_tests(
+    name="tests0",
+)

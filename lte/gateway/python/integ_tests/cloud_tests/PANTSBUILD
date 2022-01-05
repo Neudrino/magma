@@ -1,0 +1,13 @@
+pex_binary(
+    name="checkin_test",
+    entry_point="checkin_test.py",
+)
+
+pex_binary(
+    name="metrics_export_test",
+    entry_point="metrics_export_test.py",
+)
+
+python_tests(
+    name="tests",
+)

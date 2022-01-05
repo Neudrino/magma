@@ -1,0 +1,10 @@
+python_sources()
+
+pex_binary(
+    name="configlib_test",
+    entry_point="configlib_test.py",
+)
+
+python_tests(
+    name="tests",
+)

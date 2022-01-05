@@ -1,0 +1,16 @@
+python_sources()
+
+pex_binary(
+    name="loadtest_mobilityd",
+    entry_point="loadtest_mobilityd.py",
+)
+
+pex_binary(
+    name="loadtest_pipelined",
+    entry_point="loadtest_pipelined.py",
+)
+
+pex_binary(
+    name="loadtest_sessiond",
+    entry_point="loadtest_sessiond.py",
+)

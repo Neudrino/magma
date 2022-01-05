@@ -1,0 +1,10 @@
+python_sources()
+
+pex_binary(
+    name="store_tests",
+    entry_point="store_tests.py",
+)
+
+python_tests(
+    name="tests",
+)

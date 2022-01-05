@@ -1,0 +1,10 @@
+python_sources()
+
+shell_sources(
+    name="files0",
+)
+
+pex_binary(
+    name="xwfm_hostname",
+    entry_point="xwfm_hostname.py",
+)

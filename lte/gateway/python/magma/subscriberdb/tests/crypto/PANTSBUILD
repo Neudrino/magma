@@ -1,0 +1,20 @@
+python_sources()
+
+pex_binary(
+    name="crypto_tests",
+    entry_point="crypto_tests.py",
+)
+
+pex_binary(
+    name="milenage_tests",
+    entry_point="milenage_tests.py",
+)
+
+pex_binary(
+    name="test_ECIES",
+    entry_point="test_ECIES.py",
+)
+
+python_tests(
+    name="tests",
+)

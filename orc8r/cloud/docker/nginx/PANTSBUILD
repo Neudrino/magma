@@ -1,0 +1,6 @@
+pex_binary(
+    name="generate_nginx_configs",
+    entry_point="generate_nginx_configs.py",
+)
+
+python_sources()

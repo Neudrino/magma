@@ -1,0 +1,11 @@
+python_sources()
+
+pex_binary(
+    name="enodebd_iptables_rules",
+    entry_point="enodebd_iptables_rules.py",
+)
+
+pex_binary(
+    name="main",
+    entry_point="main.py",
+)

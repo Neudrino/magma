@@ -1,0 +1,86 @@
+pex_binary(
+    name="checkin_cli",
+    entry_point="checkin_cli.py",
+)
+
+pex_binary(
+    name="config_cli",
+    entry_point="config_cli.py",
+)
+
+pex_binary(
+    name="ctraced_cli",
+    entry_point="ctraced_cli.py",
+)
+
+pex_binary(
+    name="directoryd_cli",
+    entry_point="directoryd_cli.py",
+)
+
+pex_binary(
+    name="generate_fluent_bit_config",
+    entry_point="generate_fluent_bit_config.py",
+)
+
+pex_binary(
+    name="generate_lighttpd_config",
+    entry_point="generate_lighttpd_config.py",
+)
+
+pex_binary(
+    name="generate_nghttpx_config",
+    entry_point="generate_nghttpx_config.py",
+)
+
+pex_binary(
+    name="generate_service_config",
+    entry_point="generate_service_config.py",
+)
+
+pex_binary(
+    name="health_cli",
+    entry_point="health_cli.py",
+)
+
+pex_binary(
+    name="magma_conditional_service",
+    entry_point="magma_conditional_service.py",
+)
+
+pex_binary(
+    name="magma_get_config",
+    entry_point="magma_get_config.py",
+)
+
+pex_binary(
+    name="magmad_cli",
+    entry_point="magmad_cli.py",
+)
+
+python_sources()
+
+pex_binary(
+    name="service303_cli",
+    entry_point="service303_cli.py",
+)
+
+pex_binary(
+    name="service_util",
+    entry_point="service_util.py",
+)
+
+pex_binary(
+    name="show_gateway_info",
+    entry_point="show_gateway_info.py",
+)
+
+pex_binary(
+    name="traffic_cli",
+    entry_point="traffic_cli.py",
+)
+
+pex_binary(
+    name="verify_streamed_mconfigs",
+    entry_point="verify_streamed_mconfigs.py",
+)

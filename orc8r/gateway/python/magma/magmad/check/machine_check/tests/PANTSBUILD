@@ -1,0 +1,6 @@
+pex_binary(
+    name="cpu_info_tests",
+    entry_point="cpu_info_tests.py",
+)
+
+python_sources()

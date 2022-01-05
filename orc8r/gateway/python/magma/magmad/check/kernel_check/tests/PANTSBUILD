@@ -1,0 +1,6 @@
+pex_binary(
+    name="kernel_versions_tests",
+    entry_point="kernel_versions_tests.py",
+)
+
+python_sources()

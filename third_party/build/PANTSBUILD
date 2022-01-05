@@ -1,0 +1,8 @@
+pex_binary(
+    name="build",
+    entry_point="build.py",
+)
+
+python_sources(
+    name="build0",
+)

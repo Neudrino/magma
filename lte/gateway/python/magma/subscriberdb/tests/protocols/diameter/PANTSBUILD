@@ -1,0 +1,21 @@
+pex_binary(
+    name="base_application_tests",
+    entry_point="base_application_tests.py",
+)
+
+python_sources()
+
+pex_binary(
+    name="s6a_application_tests",
+    entry_point="s6a_application_tests.py",
+)
+
+pex_binary(
+    name="s6a_relay_tests",
+    entry_point="s6a_relay_tests.py",
+)
+
+pex_binary(
+    name="server_tests",
+    entry_point="server_tests.py",
+)

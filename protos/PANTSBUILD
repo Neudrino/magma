@@ -1,0 +1,11 @@
+pex_binary(
+    name="gen_prometheus_proto",
+    entry_point="gen_prometheus_proto.py",
+)
+
+pex_binary(
+    name="gen_protos",
+    entry_point="gen_protos.py",
+)
+
+python_sources()

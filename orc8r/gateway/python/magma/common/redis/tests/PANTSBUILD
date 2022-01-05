@@ -1,0 +1,6 @@
+pex_binary(
+    name="dict_tests",
+    entry_point="dict_tests.py",
+)
+
+python_sources()

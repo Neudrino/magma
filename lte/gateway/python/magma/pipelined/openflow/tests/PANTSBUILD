@@ -1,0 +1,8 @@
+pex_binary(
+    name="test_msg_hub",
+    entry_point="test_msg_hub.py",
+)
+
+python_tests(
+    name="tests",
+)

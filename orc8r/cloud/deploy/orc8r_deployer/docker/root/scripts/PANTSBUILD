@@ -1,0 +1,15 @@
+python_sources()
+
+pex_binary(
+    name="test_helm_charts_sync",
+    entry_point="test_helm_charts_sync.py",
+)
+
+pex_binary(
+    name="test_vars_sync",
+    entry_point="test_vars_sync.py",
+)
+
+python_tests(
+    name="tests",
+)

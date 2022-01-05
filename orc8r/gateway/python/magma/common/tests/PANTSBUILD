@@ -1,0 +1,11 @@
+pex_binary(
+    name="metrics_tests",
+    entry_point="metrics_tests.py",
+)
+
+pex_binary(
+    name="service303_tests",
+    entry_point="service303_tests.py",
+)
+
+python_sources()

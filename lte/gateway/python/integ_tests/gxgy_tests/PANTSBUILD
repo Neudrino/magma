@@ -1,0 +1,20 @@
+python_sources()
+
+pex_binary(
+    name="test_credit_tracking",
+    entry_point="test_credit_tracking.py",
+)
+
+pex_binary(
+    name="test_failure_scenarios",
+    entry_point="test_failure_scenarios.py",
+)
+
+pex_binary(
+    name="test_usage_monitors",
+    entry_point="test_usage_monitors.py",
+)
+
+python_tests(
+    name="tests",
+)

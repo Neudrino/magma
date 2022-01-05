@@ -1,0 +1,6 @@
+python_sources()
+
+pex_binary(
+    name="ebpf_manager",
+    entry_point="ebpf_manager.py",
+)

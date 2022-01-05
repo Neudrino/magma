@@ -1,0 +1,10 @@
+pex_binary(
+    name="ip_allocator_dhcp_mac_addr_test",
+    entry_point="ip_allocator_dhcp_mac_addr_test.py",
+)
+
+python_sources()
+
+python_tests(
+    name="tests0",
+)

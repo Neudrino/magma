@@ -1,0 +1,11 @@
+pex_binary(
+    name="ping_tests",
+    entry_point="ping_tests.py",
+)
+
+pex_binary(
+    name="routing_table_tests",
+    entry_point="routing_table_tests.py",
+)
+
+python_sources()

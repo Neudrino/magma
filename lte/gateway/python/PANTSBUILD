@@ -1,0 +1,6 @@
+pex_binary(
+    name="precommit",
+    entry_point="precommit.py",
+)
+
+python_sources()

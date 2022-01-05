@@ -1,0 +1,25 @@
+pex_binary(
+    name="MVC2_5G_Orc8r_deployment_script",
+    entry_point="MVC2_5G_Orc8r_deployment_script.py",
+)
+
+pex_binary(
+    name="agw_state",
+    entry_point="agw_state.py",
+)
+
+pex_binary(
+    name="mvc1_5g_orc8r_deployment_script",
+    entry_point="mvc1_5g_orc8r_deployment_script.py",
+)
+
+python_sources()
+
+shell_sources(
+    name="scripts0",
+)
+
+pex_binary(
+    name="update_agw_state",
+    entry_point="update_agw_state.py",
+)
