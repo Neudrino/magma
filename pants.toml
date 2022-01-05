@@ -4,7 +4,14 @@ backend_packages = [
     "pants.backend.shell",
     "pants.backend.codegen.protobuf.python",
     "pants.backend.python",
-    "pants.backend.python.lint.black",
+    #"pants.backend.python.lint.bandit",
+    #"pants.backend.python.lint.black",
+    #"pants.backend.python.lint.docformatter",
+    #"pants.backend.python.lint.flake8",
+    #"pants.backend.python.lint.isort",
+    #"pants.backend.python.lint.pylint",
+    #"pants.backend.python.lint.yapf",
+    #"pants.backend.experimental.python.lint.autoflake",
 ]
 build_patterns = ["PANTSBUILD", "PANTSBUILD.*"]
 
