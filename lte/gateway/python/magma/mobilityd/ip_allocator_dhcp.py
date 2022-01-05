@@ -37,12 +37,14 @@ from .mobility_store import MobilityStore
 DEFAULT_DHCP_REQUEST_RETRY_FREQUENCY = 10
 DEFAULT_DHCP_REQUEST_RETRY_DELAY = 1
 
-LOG = logging.getLogger('mobilityd.dhcp.alloc')
+LOG = logging.getLogger("mobilityd.dhcp.alloc")
 
 
 class IPAllocatorDHCP(IPAllocator):
     def __init__(
-        self, store: MobilityStore, retry_limit: int = 300,
+        self,
+        store: MobilityStore,
+        retry_limit: int = 300,
         iface: str = "dhcp0",
     ):
         """
@@ -90,7 +92,7 @@ class IPAllocatorDHCP(IPAllocator):
         return list(deepcopy(self._store.assigned_ip_blocks))
 
     def list_allocated_ips(self, ipblock: ip_network) -> List[ip_address]:
-        """ List IP addresses allocated from a given IP block
+        """List IP addresses allocated from a given IP block
 
         Args:
             ipblock (ipaddress.ip_network): ip network to add
@@ -101,8 +103,8 @@ class IPAllocatorDHCP(IPAllocator):
 
         """
         return [
-            ip for ip in
-            self._store.ip_state_map.list_ips(IPState.ALLOCATED)
+            ip
+            for ip in self._store.ip_state_map.list_ips(IPState.ALLOCATED)
             if ip in ipblock
         ]
 
@@ -124,7 +126,9 @@ class IPAllocatorDHCP(IPAllocator):
 
         dhcp_desc = self._dhcp_client.get_dhcp_desc(mac, str(vlan_id))
         LOG.debug(
-            "allocate IP for %s mac %s dhcp_desc %s", sid, mac,
+            "allocate IP for %s mac %s dhcp_desc %s",
+            sid,
+            mac,
             dhcp_desc,
         )
 
@@ -146,7 +150,8 @@ class IPAllocatorDHCP(IPAllocator):
             return ip_desc
         else:
             msg = "No available IP addresses From DHCP for SID: {} MAC {}".format(
-                sid, mac,
+                sid,
+                mac,
             )
             raise NoAvailableIPError(msg)
 
@@ -184,14 +189,16 @@ class IPAllocatorDHCP(IPAllocator):
             self._store.assigned_ip_blocks.remove(ip_block_network)
         logging.debug(
             "del: _assigned_ip_blocks %s ipblock %s",
-            self._store.assigned_ip_blocks, ip_desc.ip_block,
+            self._store.assigned_ip_blocks,
+            ip_desc.ip_block,
         )
 
     def stop_dhcp_sniffer(self):
         self._dhcp_client.stop()
 
     def _alloc_ip_address_from_dhcp(
-        self, mac: MacAddress,
+        self,
+        mac: MacAddress,
         vlan: int,
     ) -> DHCPDescriptor:
         retry_count = 0
@@ -204,7 +211,8 @@ class IPAllocatorDHCP(IPAllocator):
 
                 if retry_count % DEFAULT_DHCP_REQUEST_RETRY_FREQUENCY == 0:
                     self._dhcp_client.send_dhcp_packet(
-                        mac, vlan,
+                        mac,
+                        vlan,
                         DHCPState.DISCOVER,
                     )
                 self.dhcp_wait.wait(timeout=DEFAULT_DHCP_REQUEST_RETRY_DELAY)

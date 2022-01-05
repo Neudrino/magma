@@ -28,7 +28,6 @@ DEFAULT_IP_RECYCLE_INTERVAL = 15
 
 
 class IPAllocator(ABC):
-
     @abstractmethod
     def add_ip_block(self, ipblock: ip_network):
         ...
@@ -59,46 +58,51 @@ class IPAllocator(ABC):
 
 
 class OverlappedIPBlocksError(Exception):
-    """ Exception thrown when a given IP block overlaps with existing ones
-    """
+    """Exception thrown when a given IP block overlaps with existing ones"""
+
     pass
 
 
 class IPBlockNotFoundError(Exception):
-    """ Exception thrown when listing an IP block that is not found in the ip
+    """Exception thrown when listing an IP block that is not found in the ip
     block list
     """
+
     pass
 
 
 class NoAvailableIPError(Exception):
-    """ Exception thrown when no IP is available in the free list for an ip
+    """Exception thrown when no IP is available in the free list for an ip
     allocation request
     """
+
     pass
 
 
 class DuplicatedIPAllocationError(Exception):
-    """ Exception thrown when an IP has already been allocated to a UE
-    """
+    """Exception thrown when an IP has already been allocated to a UE"""
+
     pass
 
 
 class DuplicateIPAssignmentError(Exception):
-    """ Exception thrown when underlying IP allocator assigns duplicate
+    """Exception thrown when underlying IP allocator assigns duplicate
     Ip address to two different SID. This also catches dup IP across
     two different APNs or overlaps in IP-POOL.
     """
+
     pass
 
 
 class IPNotInUseError(Exception):
-    """ Exception thrown when releasing an IP address that is not found in the
+    """Exception thrown when releasing an IP address that is not found in the
     used list
     """
+
     pass
 
 
 class MappingNotFoundError(Exception):
-    """ Exception thrown when releasing a non-exising SID-IP mapping """
+    """Exception thrown when releasing a non-exising SID-IP mapping"""
+
     pass

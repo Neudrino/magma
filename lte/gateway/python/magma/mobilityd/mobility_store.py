@@ -34,12 +34,14 @@ ALLOCATED_SESSION_PREFIX_TYPE = "mobilityd_allocated_session_prefix"
 
 class MobilityStore(object):
     def __init__(
-        self, client: redis.Redis,
+        self,
+        client: redis.Redis,
     ):
         self.init_store(client)
 
     def init_store(
-        self, client: redis.Redis,
+        self,
+        client: redis.Redis,
     ):
         self.ip_state_map = IpDescriptorMap(
             defaultdict_key(lambda key: ip_states(client, key)),
@@ -76,7 +78,7 @@ class IPDescDict(RedisFlatDict):
 
 
 def ip_states(client, key):
-    """ Get Redis view of IP states. """
+    """Get Redis view of IP states."""
     redis_dict = RedisHashDict(
         client,
         IPSTATES_REDIS_TYPE.format(key),
@@ -107,7 +109,8 @@ class MacToIP(RedisFlatDict):
     def __init__(self, client):
         serde = RedisSerde(
             MAC_TO_IP_REDIS_TYPE,
-            get_json_serializer(), get_json_deserializer(),
+            get_json_serializer(),
+            get_json_deserializer(),
         )
         super().__init__(client, serde)
 
@@ -124,7 +127,8 @@ class GatewayInfoMap(RedisFlatDict):
     def __init__(self, client):
         serde = RedisSerde(
             DHCP_GW_INFO_REDIS_TYPE,
-            get_json_serializer(), get_json_deserializer(),
+            get_json_serializer(),
+            get_json_deserializer(),
         )
         super().__init__(client, serde)
 
@@ -142,7 +146,8 @@ class AllocatedIID(RedisFlatDict):
     def __init__(self, client):
         serde = RedisSerde(
             ALLOCATED_IID_REDIS_TYPE,
-            get_json_serializer(), get_json_deserializer(),
+            get_json_serializer(),
+            get_json_deserializer(),
         )
         super().__init__(client, serde)
 
@@ -159,7 +164,8 @@ class AllocatedSessionPrefix(RedisFlatDict):
     def __init__(self, client):
         serde = RedisSerde(
             ALLOCATED_SESSION_PREFIX_TYPE,
-            get_json_serializer(), get_json_deserializer(),
+            get_json_serializer(),
+            get_json_deserializer(),
         )
         super().__init__(client, serde)
 

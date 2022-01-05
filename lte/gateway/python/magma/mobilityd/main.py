@@ -30,14 +30,17 @@ from magma.mobilityd.ipv6_allocator_pool import IPv6AllocatorPool
 from magma.mobilityd.mobility_store import MobilityStore
 from magma.mobilityd.rpc_servicer import MobilityServiceRpcServicer
 
-DEFAULT_IPV6_PREFIX_ALLOC_MODE = 'RANDOM'
+DEFAULT_IPV6_PREFIX_ALLOC_MODE = "RANDOM"
 RETRY_LIMIT = 300
 
 
 def _get_ipv4_allocator(
-    store: MobilityStore, allocator_type: int,
-    static_ip_enabled: bool, multi_apn: bool,
-    dhcp_iface: str, dhcp_retry_limit: int,
+    store: MobilityStore,
+    allocator_type: int,
+    static_ip_enabled: bool,
+    multi_apn: bool,
+    dhcp_iface: str,
+    dhcp_retry_limit: int,
     subscriberdb_rpc_stub: SubscriberDBStub = None,
 ):
     # Read default GW, this is required for static IP allocation.
@@ -58,7 +61,8 @@ def _get_ipv4_allocator(
 
     if static_ip_enabled:
         ip_allocator = IPAllocatorStaticWrapper(
-            store=store, subscriberdb_rpc_stub=subscriberdb_rpc_stub,
+            store=store,
+            subscriberdb_rpc_stub=subscriberdb_rpc_stub,
             ip_allocator=ip_allocator,
         )
 
@@ -79,10 +83,12 @@ def _get_ipv4_allocator(
 
 
 def _get_ipv6_allocator(
-        store: MobilityStore, allocator_type: int,
-        static_ip_enabled: bool, mconfig: any,
-        ipv6_prefixlen: int,
-        subscriberdb_rpc_stub: SubscriberDBStub = None,
+    store: MobilityStore,
+    allocator_type: int,
+    static_ip_enabled: bool,
+    mconfig: any,
+    ipv6_prefixlen: int,
+    subscriberdb_rpc_stub: SubscriberDBStub = None,
 ):
 
     # Init IPv6 allocator, for now only IP_POOL mode is supported for IPv6
@@ -97,8 +103,10 @@ def _get_ipv6_allocator(
 
     if static_ip_enabled:
         ip_allocator = IPAllocatorStaticWrapper(
-            store=store, subscriberdb_rpc_stub=subscriberdb_rpc_stub,
-            ip_allocator=ip_allocator, ipv6=True,
+            store=store,
+            subscriberdb_rpc_stub=subscriberdb_rpc_stub,
+            ip_allocator=ip_allocator,
+            ipv6=True,
         )
 
     logging.info(
@@ -126,7 +134,8 @@ def _get_ip_block(
     """
     if not ip_block_str:
         logging.warning(
-            "%s ip block is not specified in mconfig, skipping", ip_type,
+            "%s ip block is not specified in mconfig, skipping",
+            ip_type,
         )
         return None
     try:
@@ -143,22 +152,24 @@ def _get_value_or_default(val: Any, default: Any) -> Any:
 
 def main():
     """Start mobilityd"""
-    service = MagmaService('mobilityd', mconfigs_pb2.MobilityD())
+    service = MagmaService("mobilityd", mconfigs_pb2.MobilityD())
 
     # Load service configs and mconfig
     config = service.config
     mconfig = service.mconfig
 
     # Optionally pipe errors to Sentry
-    sentry_init(service_name=service.name, sentry_mconfig=service.shared_mconfig.sentry_config)
+    sentry_init(
+        service_name=service.name, sentry_mconfig=service.shared_mconfig.sentry_config
+    )
 
-    multi_apn = config.get('multi_apn', mconfig.multi_apn_ip_alloc)
-    static_ip_enabled = config.get('static_ip', mconfig.static_ip_enabled)
+    multi_apn = config.get("multi_apn", mconfig.multi_apn_ip_alloc)
+    static_ip_enabled = config.get("static_ip", mconfig.static_ip_enabled)
     allocator_type = mconfig.ip_allocator_type
 
-    dhcp_iface = config.get('dhcp_iface', 'dhcp0')
-    dhcp_retry_limit = config.get('retry_limit', RETRY_LIMIT)
-    ipv6_prefixlen = config.get('ipv6_prefixlen', None)
+    dhcp_iface = config.get("dhcp_iface", "dhcp0")
+    dhcp_retry_limit = config.get("retry_limit", RETRY_LIMIT)
+    ipv6_prefixlen = config.get("ipv6_prefixlen", None)
 
     # TODO: consider adding gateway mconfig to decide whether to
     # persist to Redis
@@ -168,19 +179,23 @@ def main():
     )
 
     chan = ServiceRegistry.get_rpc_channel(
-        'subscriberdb',
+        "subscriberdb",
         ServiceRegistry.LOCAL,
     )
     ipv4_allocator = _get_ipv4_allocator(
-        store, allocator_type,
-        static_ip_enabled, multi_apn,
-        dhcp_iface, dhcp_retry_limit,
+        store,
+        allocator_type,
+        static_ip_enabled,
+        multi_apn,
+        dhcp_iface,
+        dhcp_retry_limit,
         SubscriberDBStub(chan),
     )
 
     # Init IPv6 allocator, for now only IP_POOL mode is supported for IPv6
     ipv6_allocator = _get_ipv6_allocator(
-        store, allocator_type,
+        store,
+        allocator_type,
         static_ip_enabled,
         mconfig,
         ipv6_prefixlen,
@@ -194,7 +209,7 @@ def main():
     # No dynamic reloading support for now, assume restart after updates
     ipv4_block = _get_ip_block(mconfig.ip_block, "IPv4")
     if ipv4_block is not None:
-        logging.info('Adding IPv4 block')
+        logging.info("Adding IPv4 block")
         try:
             allocated_ip_blocks = ip_address_man.list_added_ip_blocks()
             if ipv4_block not in allocated_ip_blocks:
@@ -206,7 +221,7 @@ def main():
 
     ipv6_block = _get_ip_block(mconfig.ipv6_block, "IPv6")
     if ipv6_block is not None:
-        logging.info('Adding IPv6 block')
+        logging.info("Adding IPv6 block")
         try:
             allocated_ipv6_block = ip_address_man.get_assigned_ipv6_block()
             if ipv6_block != allocated_ipv6_block:
@@ -218,7 +233,8 @@ def main():
 
     # Add all servicers to the server
     mobility_service_servicer = MobilityServiceRpcServicer(
-        ip_address_man, config.get('print_grpc_payload', False),
+        ip_address_man,
+        config.get("print_grpc_payload", False),
     )
     mobility_service_servicer.add_to_server(service.rpc_server)
     service.run()

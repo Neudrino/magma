@@ -59,14 +59,17 @@ from .subscriberdb_client import (
     SubscriberDBStaticIPValueError,
 )
 
-enable_sentry_wrapper = get_sentry_status("mobilityd") == SentryStatus.SEND_SELECTED_ERRORS
+enable_sentry_wrapper = (
+    get_sentry_status("mobilityd") == SentryStatus.SEND_SELECTED_ERRORS
+)
 
 
 class MobilityServiceRpcServicer(MobilityServiceServicer):
-    """ gRPC based server for the IPAllocator. """
+    """gRPC based server for the IPAllocator."""
 
     def __init__(
-        self, ip_address_manager: IPAddressManager,
+        self,
+        ip_address_manager: IPAddressManager,
         print_grpc_payload: bool = False,
     ):
         """Initialize mobilityd GRPC endpoints."""
@@ -77,28 +80,28 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
             logging.info("Printing GRPC messages")
 
     def add_to_server(self, server):
-        """ Add the servicer to a gRPC server """
+        """Add the servicer to a gRPC server"""
         add_MobilityServiceServicer_to_server(self, server)
 
     def add_ip_block(self, ip_block):
-        """ Add IP block to the IP allocator.
+        """Add IP block to the IP allocator.
 
-            Args:
-                ip_block (ipaddress.ip_network): ip network to add
-                e.g. ipaddress.ip_network("10.0.0.0/24")
+        Args:
+            ip_block (ipaddress.ip_network): ip network to add
+            e.g. ipaddress.ip_network("10.0.0.0/24")
 
-            Raise:
-                OverlappedIPBlocksError: if the given IP block overlaps with
-                existing ones
-                IPVersionNotSupportedError: if given IP version of the IP block
-                is not supported
+        Raise:
+            OverlappedIPBlocksError: if the given IP block overlaps with
+            existing ones
+            IPVersionNotSupportedError: if given IP version of the IP block
+            is not supported
         """
         self._ip_address_man.add_ip_block(ip_block)
 
     @return_void
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def AddIPBlock(self, request, context):
-        """ Add a range of IP addresses into the free IP pool
+        """Add a range of IP addresses into the free IP pool
 
         Args:
             request (IPBlock): ip block to add. The request has the
@@ -116,14 +119,14 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
         try:
             self.add_ip_block(ipblock)
         except OverlappedIPBlocksError:
-            context.set_details('Overlapped ip block: %s' % ipblock)
+            context.set_details("Overlapped ip block: %s" % ipblock)
             context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
         except IPVersionNotSupportedError:
             self._unimplemented_ip_version_error(context)
 
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def ListAddedIPv4Blocks(self, request, context):
-        """ Return a list of IPv4 blocks assigned """
+        """Return a list of IPv4 blocks assigned"""
         logging.debug("Received ListAddedIPv4Blocks")
         self._print_grpc(request)
         resp = ListAddedIPBlocksResponse()
@@ -144,7 +147,7 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
 
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def ListAddedIPv6Blocks(self, request, context):
-        """ Return a list of IPv6 blocks assigned """
+        """Return a list of IPv6 blocks assigned"""
         self._print_grpc(request)
         resp = ListAddedIPBlocksResponse()
 
@@ -165,7 +168,7 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
 
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def ListAllocatedIPs(self, request, context):
-        """ Return a list of IPs allocated from a IP block
+        """Return a list of IPs allocated from a IP block
 
         Args:
             request (IPBlock): ip block to add. The request has the
@@ -190,12 +193,13 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
                     IPAddress(
                         version=IPAddress.IPV4,
                         address=ip.packed,
-                    ) for ip in ips
+                    )
+                    for ip in ips
                 ]
 
                 resp.ip_list.extend(ip_msg_list)
             except IPBlockNotFoundError:
-                context.set_details('IP block not found: %s' % ipblock)
+                context.set_details("IP block not found: %s" % ipblock)
                 context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
         else:
             self._unimplemented_ip_version_error(context)
@@ -205,7 +209,7 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
 
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def AllocateIPAddress(self, request, context):
-        """ Allocate an IP address from the free IP pool """
+        """Allocate an IP address from the free IP pool"""
         logging.debug("Received AllocateIPAddress")
         self._print_grpc(request)
         composite_sid = SIDUtils.to_str(request.sid)
@@ -215,23 +219,29 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
         if request.version == AllocateIPRequest.IPV4:
             resp = self._get_allocate_ip_response(
                 composite_sid + ",ipv4",
-                IPAddress.IPV4, context,
+                IPAddress.IPV4,
+                context,
                 request,
             )
         elif request.version == AllocateIPRequest.IPV6:
             resp = self._get_allocate_ip_response(
                 composite_sid + ",ipv6",
-                IPAddress.IPV6, context,
+                IPAddress.IPV6,
+                context,
                 request,
             )
         elif request.version == AllocateIPRequest.IPV4V6:
             ipv4_response = self._get_allocate_ip_response(
-                composite_sid + ",ipv4", IPAddress.IPV4,
-                context, request,
+                composite_sid + ",ipv4",
+                IPAddress.IPV4,
+                context,
+                request,
             )
             ipv6_response = self._get_allocate_ip_response(
-                composite_sid + ",ipv6", IPAddress.IPV6,
-                context, request,
+                composite_sid + ",ipv6",
+                IPAddress.IPV6,
+                context,
+                request,
             )
             ipv4_addr = ipv4_response.ip_list[0]
             ipv6_addr = ipv6_response.ip_list[0]
@@ -249,7 +259,7 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
     @return_void
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def ReleaseIPAddress(self, request, context):
-        """ Release an allocated IP address """
+        """Release an allocated IP address"""
         logging.debug("Received ReleaseIPAddress")
         self._print_grpc(request)
 
@@ -265,7 +275,8 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
 
         try:
             self._ip_address_man.release_ip_address(
-                composite_sid, ip,
+                composite_sid,
+                ip,
             )
             logging.info(
                 "Released IP %s for sid %s",
@@ -273,18 +284,18 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
                 SIDUtils.to_str(request.sid),
             )
         except IPNotInUseError:
-            context.set_details('IP %s not in use' % ip)
+            context.set_details("IP %s not in use" % ip)
             context.set_code(grpc.StatusCode.NOT_FOUND)
         except MappingNotFoundError:
             context.set_details(
-                '(SID, IP) map not found: (%s, %s)'
+                "(SID, IP) map not found: (%s, %s)"
                 % (SIDUtils.to_str(request.sid), ip),
             )
             context.set_code(grpc.StatusCode.NOT_FOUND)
 
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def RemoveIPBlock(self, request, context):
-        """ Attempt to remove IP blocks and return the removed blocks """
+        """Attempt to remove IP blocks and return the removed blocks"""
         logging.debug("Received RemoveIPBlock")
         self._print_grpc(request)
 
@@ -337,8 +348,7 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
         ip = self._ip_address_man.get_ip_for_sid(composite_sid)
         if ip is None:
             context.set_details(
-                'SID %s not found'
-                % SIDUtils.to_str(request.sid),
+                "SID %s not found" % SIDUtils.to_str(request.sid),
             )
             context.set_code(grpc.StatusCode.NOT_FOUND)
             resp = IPAddress()
@@ -358,19 +368,19 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
         sid = self._ip_address_man.get_sid_for_ip(sent_ip)
 
         if sid is None:
-            context.set_details('IP address %s not found' % str(sent_ip))
+            context.set_details("IP address %s not found" % str(sent_ip))
             context.set_code(grpc.StatusCode.NOT_FOUND)
             resp = SubscriberID()
         else:
             # handle composite key case
-            sid, *_ = sid.partition('.')
+            sid, *_ = sid.partition(".")
             resp = SIDUtils.to_pb(sid)
         self._print_grpc(resp)
         return resp
 
     @send_uncaught_errors_to_monitoring(enable_sentry_wrapper)
     def GetSubscriberIPTable(self, request, context):
-        """ Get the full subscriber table """
+        """Get the full subscriber table"""
         logging.debug("Received GetSubscriberIPTable")
         self._print_grpc(request)
 
@@ -379,8 +389,8 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
         csid_ip_pairs = self._ip_address_man.get_sid_ip_table()
         for composite_sid, ip in csid_ip_pairs:
             # handle composite sid to sid and apn mapping
-            sid, _, apn_part = composite_sid.partition('.')
-            apn, *_ = apn_part.split(',')
+            sid, _, apn_part = composite_sid.partition(".")
+            apn, *_ = apn_part.split(",")
             sid_pb = SIDUtils.to_pb(sid)
             version = IPAddress.IPV4 if ip.version == 4 else IPAddress.IPV6
             ip_msg = IPAddress(version=version, address=ip.packed)
@@ -409,7 +419,10 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
         self._ip_address_man.set_gateway_info(info)
 
     def _get_allocate_ip_response(
-        self, composite_sid, version, context,
+        self,
+        composite_sid,
+        version,
+        context,
         request,
     ):
         try:
@@ -429,42 +442,42 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
                 vlan=str(vlan),
             )
         except NoAvailableIPError:
-            context.set_details('No free IP available')
+            context.set_details("No free IP available")
             context.set_code(grpc.StatusCode.RESOURCE_EXHAUSTED)
         except DuplicatedIPAllocationError:
             context.set_details(
-                'IP has been allocated for this subscriber',
+                "IP has been allocated for this subscriber",
             )
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)
         except DuplicateIPAssignmentError:
             context.set_details(
-                'IP has been allocated for other subscriber',
+                "IP has been allocated for other subscriber",
             )
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)
         except MaxCalculationError:
             context.set_details(
-                'Reached maximum IPv6 calculation tries',
+                "Reached maximum IPv6 calculation tries",
             )
             context.set_code(grpc.StatusCode.RESOURCE_EXHAUSTED)
         except SubscriberDBConnectionError:
             context.set_details(
-                'Could not connect to SubscriberDB',
+                "Could not connect to SubscriberDB",
             )
             context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
         except SubscriberDBStaticIPValueError:
             context.set_details(
-                'Could not parse static IP response from SubscriberDB',
+                "Could not parse static IP response from SubscriberDB",
             )
             context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
         except SubscriberDBMultiAPNValueError:
             context.set_details(
-                'Could not parse MultiAPN IP response from SubscriberDB',
+                "Could not parse MultiAPN IP response from SubscriberDB",
             )
             context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
         return AllocateIPAddressResponse()
 
     def _ipblock_msg_to_ipblock(self, ipblock_msg, context):
-        """ convert IPBlock to ipaddress.ip_network """
+        """convert IPBlock to ipaddress.ip_network"""
         try:
             ip = ipaddress.ip_address(ipblock_msg.net_address)
             subnet = "%s/%s" % (str(ip), ipblock_msg.prefix_len)
@@ -472,10 +485,11 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
             return ipblock
         except ValueError:
             context.set_details(
-                'Invalid IPBlock format: version=%s,'
-                'net_address=%s, prefix_len=%s' %
-                (
-                    ipblock_msg.version, ipblock_msg.net_address,
+                "Invalid IPBlock format: version=%s,"
+                "net_address=%s, prefix_len=%s"
+                % (
+                    ipblock_msg.version,
+                    ipblock_msg.net_address,
                     ipblock_msg.prefix_len,
                 ),
             )
@@ -493,10 +507,9 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
                 MessageToJson(message),
             )
             # add indentation
-            padding = 2 * ' '
-            log_msg = ''.join(
-                "{}{}".format(padding, line)
-                for line in log_msg.splitlines(True)
+            padding = 2 * " "
+            log_msg = "".join(
+                "{}{}".format(padding, line) for line in log_msg.splitlines(True)
             )
 
             log_msg = "GRPC message:\n{}".format(log_msg)
@@ -504,10 +517,12 @@ class MobilityServiceRpcServicer(MobilityServiceServicer):
 
 
 class IPVersionNotSupportedError(Exception):
-    """ Exception thrown when an IP version is not supported """
+    """Exception thrown when an IP version is not supported"""
+
     pass
 
 
 class UnknownIPAllocatorError(Exception):
-    """ Exception thrown when an IP version is not supported """
+    """Exception thrown when an IP version is not supported"""
+
     pass

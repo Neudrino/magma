@@ -59,7 +59,9 @@ class UplinkGatewayInfo:
         self._read_default_gw_timer6 = None
         self._read_default_gw_interval_seconds = 20
 
-    def get_gw_ip(self, vlan_id: Optional[str] = "", version: int = IPAddress.IPV4) -> Optional[str]:
+    def get_gw_ip(
+        self, vlan_id: Optional[str] = "", version: int = IPAddress.IPV4
+    ) -> Optional[str]:
         """
         Retrieve gw IP address
         Args:
@@ -78,7 +80,7 @@ class UplinkGatewayInfo:
         gws = netifaces.gateways()
         logging.info("Using GW info: %s", gws)
         if gws is not None:
-            default_gw = gws.get('default', None)
+            default_gw = gws.get("default", None)
             gw_ip_addr = None
             if default_gw is not None:
                 gw_ip_addr = default_gw.get(netifaces.AF_INET, None)
@@ -102,7 +104,7 @@ class UplinkGatewayInfo:
         gws = netifaces.gateways()
         logging.info("Using GW info: %s", gws)
         if gws is not None:
-            default_gw = gws.get('default', None)
+            default_gw = gws.get("default", None)
             gw_ip_addr6 = None
             if default_gw is not None:
                 gw_ip_addr6 = default_gw.get(netifaces.AF_INET6, None)
@@ -120,7 +122,9 @@ class UplinkGatewayInfo:
         logging.info("GW-v6 probe: timer started")
 
     def update_ip(
-        self, ip: Optional[str], vlan_id=None,
+        self,
+        ip: Optional[str],
+        vlan_id=None,
         version: int = IPAddress.IPV4,
     ):
         """
@@ -152,7 +156,9 @@ class UplinkGatewayInfo:
         self._backing_map[vlan_key] = updated_info
         logging.info("GW update: GW IP[%s]: %s", vlan_key, ip)
 
-    def get_gw_mac(self, vlan_id: Optional[str] = None, version: int = IPAddress.IPV4) -> Optional[str]:
+    def get_gw_mac(
+        self, vlan_id: Optional[str] = None, version: int = IPAddress.IPV4
+    ) -> Optional[str]:
         """
         Retrieve Mac address of default gw.
         Args:
@@ -165,7 +171,10 @@ class UplinkGatewayInfo:
             return None
 
     def update_mac(
-        self, ip: Optional[str], mac: Optional[str], vlan_id=None,
+        self,
+        ip: Optional[str],
+        mac: Optional[str],
+        vlan_id=None,
         version: int = IPAddress.IPV4,
     ):
         """
@@ -183,10 +192,12 @@ class UplinkGatewayInfo:
         vlan_key = _get_vlan_key(vlan_id, version)
 
         # TODO: enhance check for MAC address sanity.
-        if mac is None or ':' not in mac:
+        if mac is None or ":" not in mac:
             logging.error(
                 "Incorrect mac format: %s for IP %s (vlan_key %s)",
-                mac, ip, vlan_id,
+                mac,
+                ip,
+                vlan_id,
             )
             return
         gw_ip = IPAddress(

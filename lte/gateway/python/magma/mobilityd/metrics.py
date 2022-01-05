@@ -15,10 +15,10 @@ from prometheus_client import Counter
 
 # Counters for IP address management
 IP_ALLOCATED_TOTAL = Counter(
-    'ip_address_allocated',
-    'Total IP addresses allocated',
+    "ip_address_allocated",
+    "Total IP addresses allocated",
 )
 IP_RELEASED_TOTAL = Counter(
-    'ip_address_released',
-    'Total IP addresses released',
+    "ip_address_released",
+    "Total IP addresses released",
 )

@@ -41,14 +41,12 @@ DEFAULT_IP_RECYCLE_INTERVAL = 15
 
 
 class IpAllocatorPool(IPAllocator):
-
     def __init__(self, store: MobilityStore):
-        """ Initializes a new IP allocator
-        """
+        """Initializes a new IP allocator"""
         self._store = store  # mobilityd storage instance
 
     def add_ip_block(self, ipblock: ip_network):
-        """ Add a block of IP addresses to the free IP list
+        """Add a block of IP addresses to the free IP list
 
         IP blocks should not overlap.
 
@@ -69,11 +67,12 @@ class IpAllocatorPool(IPAllocator):
         #  gtp_br0 iface and test VM
         num_reserved_addresses = 11
         for ip in ipblock.hosts():
-            state = IPState.RESERVED if num_reserved_addresses > 0 \
-                else IPState.FREE
+            state = IPState.RESERVED if num_reserved_addresses > 0 else IPState.FREE
             ip_desc = IPDesc(
-                ip=ip, state=state,
-                ip_block=ipblock, sid=None,
+                ip=ip,
+                state=state,
+                ip_block=ipblock,
+                sid=None,
                 ip_type=IPType.IP_POOL,
             )
             self._store.ip_state_map.add_ip_to_state(ip, ip_desc, state)
@@ -81,10 +80,11 @@ class IpAllocatorPool(IPAllocator):
                 num_reserved_addresses -= 1
 
     def remove_ip_blocks(
-        self, ipblocks: List[ip_network],
+        self,
+        ipblocks: List[ip_network],
         force: bool = False,
     ) -> List[ip_network]:
-        """ Makes the indicated block(s) unavailable for allocation
+        """Makes the indicated block(s) unavailable for allocation
 
         If force is False, blocks that have any addresses currently allocated
         will not be removed. Otherwise, if force is True, the indicated blocks
@@ -127,13 +127,14 @@ class IpAllocatorPool(IPAllocator):
 
         # "soft" removal does not remove blocks which have IPs allocated
         if not force:
-            allocated_ip_block_set = self._store.ip_state_map.get_allocated_ip_block_set()
+            allocated_ip_block_set = (
+                self._store.ip_state_map.get_allocated_ip_block_set()
+            )
             remove_blocks -= allocated_ip_block_set
             del allocated_ip_block_set
 
         # Remove the associated IP addresses
-        remove_ips = \
-            (ip for block in remove_blocks for ip in block.hosts())
+        remove_ips = (ip for block in remove_blocks for ip in block.hosts())
         for ip in remove_ips:
             for state in (IPState.FREE, IPState.RELEASED, IPState.REAPED):
                 self._store.ip_state_map.remove_ip_from_state(ip, state)
@@ -146,9 +147,9 @@ class IpAllocatorPool(IPAllocator):
                 assert not self._store.ip_state_map.test_ip_state(
                     ip,
                     IPState.ALLOCATED,
-                ), \
-                    "Unexpected ALLOCATED IP %s from a soft IP block " \
-                    "removal "
+                ), (
+                    "Unexpected ALLOCATED IP %s from a soft IP block " "removal "
+                )
 
             # Clean up SID maps
             for sid in list(self._store.sid_ips_map):
@@ -159,18 +160,17 @@ class IpAllocatorPool(IPAllocator):
 
         # Can't use generators here
         remove_sids = tuple(
-            sid for sid in self._store.sid_ips_map
-            if not self._store.sid_ips_map[sid]
+            sid for sid in self._store.sid_ips_map if not self._store.sid_ips_map[sid]
         )
         for sid in remove_sids:
             self._store.sid_ips_map.pop(sid)
 
         for block in remove_blocks:
-            logging.info('Removed IP block %s from IPv4 address pool', block)
+            logging.info("Removed IP block %s from IPv4 address pool", block)
         return list(remove_blocks)
 
     def list_added_ip_blocks(self) -> List[ip_network]:
-        """ List IP blocks added to the IP allocator
+        """List IP blocks added to the IP allocator
 
         Return:
              copy of the list of assigned IP blocks
@@ -182,7 +182,7 @@ class IpAllocatorPool(IPAllocator):
         return list(deepcopy(ret))
 
     def list_allocated_ips(self, ipblock: ip_network) -> List[ip_address]:
-        """ List IP addresses allocated from a given IP block
+        """List IP addresses allocated from a given IP block
 
         Args:
             ipblock (ipaddress.ip_network): ip network to add
@@ -200,13 +200,14 @@ class IpAllocatorPool(IPAllocator):
             raise IPBlockNotFoundError(ipblock)
 
         res = [
-            ip for ip in ipblock
+            ip
+            for ip in ipblock
             if self._store.ip_state_map.test_ip_state(ip, IPState.ALLOCATED)
         ]
         return res
 
     def alloc_ip_address(self, sid: str, vlan_id: int) -> IPDesc:
-        """ Allocate an IP address from the free list
+        """Allocate an IP address from the free list
 
         Assumption: one-to-one mappings between SID and IP.
 

@@ -29,12 +29,12 @@ from scapy.layers.inet import IP, UDP
 from scapy.layers.l2 import Dot1Q, Ether
 from scapy.sendrecv import sendp
 
-LOG = logging.getLogger('mobilityd.dhcp.sniff')
+LOG = logging.getLogger("mobilityd.dhcp.sniff")
 DHCP_ACTIVE_STATES = [DHCPState.ACK, DHCPState.OFFER]
 
 
 class DHCPClient:
-    THREAD_YIELD_TIME = .1
+    THREAD_YIELD_TIME = 0.1
 
     def __init__(
         self,
@@ -89,7 +89,9 @@ class DHCPClient:
         self._monitor_thread_event.set()
 
     def send_dhcp_packet(
-        self, mac: MacAddress, vlan: str,
+        self,
+        mac: MacAddress,
+        vlan: str,
         state: DHCPState,
         dhcp_desc: DHCPDescriptor = None,
     ):
@@ -108,7 +110,9 @@ class DHCPClient:
         if state == DHCPState.DISCOVER:
             dhcp_opts = [("message-type", "discover")]
             dhcp_desc = DHCPDescriptor(
-                mac=mac, ip="", vlan=vlan,
+                mac=mac,
+                ip="",
+                vlan=vlan,
                 state_requested=DHCPState.DISCOVER,
             )
             self._msg_xid = self._msg_xid + 1
@@ -156,7 +160,8 @@ class DHCPClient:
         sendp(pkt, iface=self._dhcp_interface, verbose=0)
 
     def get_dhcp_desc(
-        self, mac: MacAddress,
+        self,
+        mac: MacAddress,
         vlan: str,
     ) -> Optional[DHCPDescriptor]:
         """
@@ -221,14 +226,17 @@ class DHCPClient:
                     if now >= dhcp_record.lease_renew_deadline:
                         logging.debug("sending lease renewal")
                         self.send_dhcp_packet(
-                            dhcp_record.mac, dhcp_record.vlan,
-                            request_state, dhcp_record,
+                            dhcp_record.mac,
+                            dhcp_record.vlan,
+                            request_state,
+                            dhcp_record,
                         )
                     else:
                         # Find next renewal wait time.
                         time_to_renew = dhcp_record.lease_renew_deadline - now
                         wait_time = min(
-                            wait_time, time_to_renew.total_seconds(),
+                            wait_time,
+                            time_to_renew.total_seconds(),
                         )
 
             # default in wait is 30 sec
@@ -265,11 +273,13 @@ class DHCPClient:
                 subnet_mask = self._get_option(packet, "subnet_mask")
                 if subnet_mask is not None:
                     ip_subnet = IPv4Network(
-                        ip_offered + "/" + subnet_mask, strict=False,
+                        ip_offered + "/" + subnet_mask,
+                        strict=False,
                     )
                 else:
                     ip_subnet = IPv4Network(
-                        ip_offered + "/" + "32", strict=False,
+                        ip_offered + "/" + "32",
+                        strict=False,
                     )
 
                 dhcp_server_ip = None
@@ -311,7 +321,10 @@ class DHCPClient:
                     # request.
                     threading.Event().wait(self.THREAD_YIELD_TIME)
                     self.send_dhcp_packet(
-                        mac_addr, vlan, DHCPState.REQUEST, dhcp_state,
+                        mac_addr,
+                        vlan,
+                        DHCPState.REQUEST,
+                        dhcp_state,
                     )
             else:
                 LOG.debug("Unknown MAC: %s ", packet.summary())

@@ -22,6 +22,7 @@ class DHCPState(IntEnum):
     """
     DHCP protocol states.
     """
+
     UNKNOWN = 0
     DISCOVER = 1
     OFFER = 2
@@ -35,11 +36,16 @@ class DHCPState(IntEnum):
 
 class DHCPDescriptor:
     def __init__(
-        self, mac: MacAddress, ip: str,
-        state_requested: DHCPState, vlan: str,
+        self,
+        mac: MacAddress,
+        ip: str,
+        state_requested: DHCPState,
+        vlan: str,
         state: DHCPState = DHCPState.UNKNOWN,
-        subnet: str = None, server_ip: str = None,
-        router_ip: str = None, lease_expiration_time: int = 0,
+        subnet: str = None,
+        server_ip: str = None,
+        router_ip: str = None,
+        lease_expiration_time: int = 0,
         xid: str = None,
     ):
         """
@@ -66,33 +72,47 @@ class DHCPDescriptor:
         self.state_requested = state_requested
         self.server_ip = server_ip
         self.xid = xid
-        self.lease_expiration_time = datetime.now(
-        ) + timedelta(seconds=lease_expiration_time)
+        self.lease_expiration_time = datetime.now() + timedelta(
+            seconds=lease_expiration_time
+        )
         self.router_ip = router_ip
         if self.state == DHCPState.ACK:
-            new_deadline = datetime.now() + timedelta(seconds=(lease_expiration_time / 2))
+            new_deadline = datetime.now() + timedelta(
+                seconds=(lease_expiration_time / 2)
+            )
             self.lease_renew_deadline = new_deadline
         else:
             self.lease_renew_deadline = datetime.now()
 
     def __str__(self):
-        return "state: {:8s} requested state: {:8s} mac {} ip {} subnet {} " \
-               "DHCP: {} router {} " \
-               "lease time {}, renew {} xid {} vlan {}" \
-            .format(
-                self.state.name, self.state_requested.name,
-                str(self.mac), self.ip, self.subnet,
-                self.server_ip, self.router_ip, self.lease_expiration_time,
-                self.lease_renew_deadline, self.xid, self.vlan,
+        return (
+            "state: {:8s} requested state: {:8s} mac {} ip {} subnet {} "
+            "DHCP: {} router {} "
+            "lease time {}, renew {} xid {} vlan {}".format(
+                self.state.name,
+                self.state_requested.name,
+                str(self.mac),
+                self.ip,
+                self.subnet,
+                self.server_ip,
+                self.router_ip,
+                self.lease_expiration_time,
+                self.lease_renew_deadline,
+                self.xid,
+                self.vlan,
             )
+        )
 
     def get_ip_address(self) -> Optional[str]:
         """
         Return valid IP address as per DHCP state.
         :return: IP address
         """
-        if self.state == DHCPState.OFFER or self.state == DHCPState.REQUEST \
-                or self.state == DHCPState.ACK:
+        if (
+            self.state == DHCPState.OFFER
+            or self.state == DHCPState.REQUEST
+            or self.state == DHCPState.ACK
+        ):
             return self.ip
 
     def ip_is_allocated(self) -> bool:

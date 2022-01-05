@@ -26,7 +26,7 @@ class MacAddress:
         Returns: packed binary number.
         """
 
-        return bytes.fromhex(self.mac_address.replace(':', ''))
+        return bytes.fromhex(self.mac_address.replace(":", ""))
 
     def as_redis_key(self, vlan: str) -> str:
         """
@@ -34,7 +34,7 @@ class MacAddress:
         allow ':' in the key, so use '_' instead
         Returns: str to make redis happy
         """
-        key = str(self.mac_address).replace(':', '_').lower()
+        key = str(self.mac_address).replace(":", "_").lower()
         if vlan:
             return "v{}.{}".format(vlan, key)
         else:
@@ -45,9 +45,9 @@ class MacAddress:
 
 
 def create_mac_from_sid(imsi: str) -> MacAddress:
-    if imsi.upper().startswith('IMSI'):
+    if imsi.upper().startswith("IMSI"):
         return MacAddress(sid_to_mac(imsi))
-    elif imsi.find(':') != -1:
+    elif imsi.find(":") != -1:
         return MacAddress(imsi)
     elif len(imsi) == 12:
         # Convert a hex number to Mac address string format.
@@ -69,8 +69,8 @@ def sid_to_mac(com_sid: str) -> str:
     then prefix it with "8A". For example, if the IMSI = 311980000002918,
     the MAC would be 8A:E4:2C:8D:53:66.
     """
-    sid = com_sid.split('.')[0]
-    if not sid.startswith('IMSI'):
+    sid = com_sid.split(".")[0]
+    if not sid.startswith("IMSI"):
         raise InvalidIMSIError(sid)
 
     sid = sid[4:]  # strip IMSI off of string
@@ -89,14 +89,12 @@ def hex_to_mac(sid) -> str:
         sid: integer
     Returns: Hex Mac address as a string.
     """
-    return ':'.join(''.join(x) for x in zip(*[iter(sid)] * 2))
+    return ":".join("".join(x) for x in zip(*[iter(sid)] * 2))
 
 
 class InvalidIMSIError(Exception):
-    """ Exception thrown when a given IP block overlaps with existing ones
-    """
+    """Exception thrown when a given IP block overlaps with existing ones"""
 
 
 class InvalidMacAddressFormat(Exception):
-    """ Exception thrown when a given IP block overlaps with existing ones
-    """
+    """Exception thrown when a given IP block overlaps with existing ones"""

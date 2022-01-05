@@ -96,8 +96,12 @@ def _ip_desc_to_proto(desc):
     )
     ip_type = _desc_type_str_to_proto(desc.type)
     return IPDesc(
-        ip=ip, ip_block=ip_block, state=state, sid=sid,
-        type=ip_type, vlan_id=desc.vlan_id,
+        ip=ip,
+        ip_block=ip_block,
+        state=state,
+        sid=sid,
+        type=ip_type,
+        vlan_id=desc.vlan_id,
     )
 
 
@@ -113,16 +117,21 @@ def _ip_desc_from_proto(proto):
     ip = ip_address(proto.ip.address)
     ip_block_addr = ip_address(proto.ip_block.net_address).exploded
     ip_block = ip_network(
-        '{}/{}'.format(
-        ip_block_addr, proto.ip_block.prefix_len,
+        "{}/{}".format(
+            ip_block_addr,
+            proto.ip_block.prefix_len,
         ),
     )
     state = _desc_state_proto_to_str(proto.state)
     sid = proto.sid.id
     ip_type = _desc_type_proto_to_str(proto.type)
     return ip_descriptor.IPDesc(
-        ip=ip, ip_block=ip_block, state=state,
-        sid=sid, ip_type=ip_type, vlan_id=proto.vlan_id,
+        ip=ip,
+        ip_block=ip_block,
+        state=state,
+        sid=sid,
+        ip_type=ip_type,
+        vlan_id=proto.vlan_id,
     )
 
 
@@ -156,7 +165,7 @@ def deserialize_ip_block(serialized):
     proto = IPBlock()
     proto.ParseFromString(serialized)
     address_str = ip_address(proto.net_address).exploded
-    network_str = '{}/{}'.format(address_str, proto.prefix_len)
+    network_str = "{}/{}".format(address_str, proto.prefix_len)
     block = ip_network(network_str)
     return block
 

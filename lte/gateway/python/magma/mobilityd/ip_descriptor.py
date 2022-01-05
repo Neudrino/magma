@@ -47,9 +47,13 @@ class IPDesc:
     """
 
     def __init__(
-        self, ip: ipaddress.ip_address = None, state: IPState = None,
-        sid: str = None, ip_block: ipaddress.ip_network = None,
-        ip_type: IPType = None, vlan_id: int = 0,
+        self,
+        ip: ipaddress.ip_address = None,
+        state: IPState = None,
+        sid: str = None,
+        ip_block: ipaddress.ip_network = None,
+        ip_type: IPType = None,
+        vlan_id: int = 0,
     ):
         self.ip = ip
         self.ip_block = ip_block
@@ -61,14 +65,16 @@ class IPDesc:
             self.vlan_id = vlan_id
 
     def __str__(self):
-        as_str = '<mobilityd.IPDesc ' + \
-                 '{{ip: {}, ip_block: {}, state: {}, sid: {}, type: {}'.format(
-                     self.ip,
-                     self.ip_block,
-                     self.state,
-                     self.sid,
-                     self.type,
-                 )
+        as_str = (
+            "<mobilityd.IPDesc "
+            + "{{ip: {}, ip_block: {}, state: {}, sid: {}, type: {}".format(
+                self.ip,
+                self.ip_block,
+                self.state,
+                self.sid,
+                self.type,
+            )
+        )
 
         if self.vlan_id != 0:
             as_str = as_str + " vlan_is: {}".format(self.vlan_id)

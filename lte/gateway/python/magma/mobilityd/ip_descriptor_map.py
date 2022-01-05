@@ -48,7 +48,6 @@ DEFAULT_IP_RECYCLE_INTERVAL = 15
 
 
 class IpDescriptorMap:
-
     def __init__(self, ip_states: MutableMapping[IPState, Dict[str, IPDesc]]):
         """
 
@@ -58,26 +57,28 @@ class IpDescriptorMap:
         self.ip_states = ip_states
 
     def add_ip_to_state(
-        self, ip: ip_address, ip_desc: IPDesc,
+        self,
+        ip: ip_address,
+        ip_desc: IPDesc,
         state: IPState,
     ):
-        """ Add ip=>ip_desc pairs to a internal dict """
-        assert ip_desc.state == state, \
-            "ip_desc.state %s does not match with state %s" \
-            % (ip_desc.state, state)
+        """Add ip=>ip_desc pairs to a internal dict"""
+        assert (
+            ip_desc.state == state
+        ), "ip_desc.state %s does not match with state %s" % (ip_desc.state, state)
         assert state in IPState, "unknown state %s" % state
 
         self.ip_states[state][ip.exploded] = ip_desc
 
     def remove_ip_from_state(self, ip: ip_address, state: IPState) -> IPDesc:
-        """ Remove an IP from a internal dict """
+        """Remove an IP from a internal dict"""
         assert state in IPState, "unknown state %s" % state
 
         ip_desc = self.ip_states[state].pop(ip.exploded, None)
         return ip_desc
 
     def pop_ip_from_state(self, state: IPState) -> Optional[IPDesc]:
-        """ Pop an IP from a internal dict """
+        """Pop an IP from a internal dict"""
         assert state in IPState, "unknown state %s" % state
 
         try:
@@ -98,42 +99,43 @@ class IpDescriptorMap:
         return bool(self.ip_states[state]) == False
 
     def test_ip_state(self, ip: ip_address, state: IPState) -> bool:
-        """ check if IP is in state X """
+        """check if IP is in state X"""
         assert state in IPState, "unknown state %s" % state
 
         return ip.exploded in self.ip_states[state]
 
     def get_ip_state(self, ip: ip_address) -> IPState:
-        """ return the state of an IP """
+        """return the state of an IP"""
         for state in IPState:
             if self.test_ip_state(ip, state):
                 return state
         raise AssertionError("IP %s not found in any states" % ip)
 
     def list_ips(self, state: IPState) -> List[ip_address]:
-        """ return a list of IPs in state X """
+        """return a list of IPs in state X"""
         assert state in IPState, "unknown state %s" % state
 
         return [ip_address(ip) for ip in self.ip_states[state]]
 
     def mark_ip_state(self, ip: ip_address, state: IPState) -> IPDesc:
-        """ Remove, mark, add: move IP to a new state """
+        """Remove, mark, add: move IP to a new state"""
         assert state in IPState, "unknown state %s" % state
 
         old_state = self.get_ip_state(ip)
         ip_desc = self.ip_states[old_state][ip.exploded]
 
         # some internal checks
-        assert ip_desc.state != state, \
-            "move IP to the same state %s" % state
+        assert ip_desc.state != state, "move IP to the same state %s" % state
         assert ip == ip_desc.ip, "Unmatching ip_desc for %s" % ip
 
         if ip_desc.state == IPState.FREE:
-            assert ip_desc.sid is None, \
-                "Unexpected sid in a freed IPDesc {}".format(ip_desc)
+            assert ip_desc.sid is None, "Unexpected sid in a freed IPDesc {}".format(
+                ip_desc
+            )
         else:
-            assert ip_desc.sid is not None, \
-                "Missing sid in state %s IPDesc {}".format(ip_desc)
+            assert ip_desc.sid is not None, "Missing sid in state %s IPDesc {}".format(
+                ip_desc
+            )
 
         # remove, mark, add
         self.remove_ip_from_state(ip, old_state)
@@ -142,12 +144,12 @@ class IpDescriptorMap:
         return ip_desc
 
     def get_allocated_ip_block_set(self) -> Set[ip_network]:
-        """ A IP block is allocated if ANY IP is allocated from it """
+        """A IP block is allocated if ANY IP is allocated from it"""
         allocated_ips = self.ip_states[IPState.ALLOCATED]
         return {ip_desc.ip_block for ip_desc in allocated_ips.values()}
 
     def __str__(self) -> str:
-        """ return the state of an IP """
+        """return the state of an IP"""
         ret_str = "{}:".format(self.__class__.__name__)
         for state in IPState:
             ret_str = ret_str + "\n{}".format(state)

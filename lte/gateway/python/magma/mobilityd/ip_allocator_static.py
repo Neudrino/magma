@@ -39,17 +39,17 @@ DEFAULT_IP_RECYCLE_INTERVAL = 15
 
 
 class IPAllocatorStaticWrapper(IPAllocator):
-
     def __init__(
-        self, store: MobilityStore,
+        self,
+        store: MobilityStore,
         subscriberdb_rpc_stub: SubscriberDBStub,
         ip_allocator: IPAllocator,
         ipv6: bool = False,
     ):
-        """ Initializes a static IP allocator
-            This is wrapper around other configured Ip allocator. If subscriber
-            does have static IP, it uses underlying IP allocator to allocate IP
-            for the subscriber.
+        """Initializes a static IP allocator
+        This is wrapper around other configured Ip allocator. If subscriber
+        does have static IP, it uses underlying IP allocator to allocate IP
+        for the subscriber.
         """
         self._store = store
         self._subscriber_client = SubscriberDbClient(subscriberdb_rpc_stub)
@@ -60,32 +60,30 @@ class IPAllocatorStaticWrapper(IPAllocator):
             self._ip_version = 4
 
     def add_ip_block(self, ipblock: ip_network):
-        """ Add a block of IP addresses to the free IP list
-        """
+        """Add a block of IP addresses to the free IP list"""
         self._ip_allocator.add_ip_block(ipblock)
 
     def remove_ip_blocks(
-        self, ipblocks: List[ip_network],
+        self,
+        ipblocks: List[ip_network],
         force: bool = False,
     ) -> List[ip_network]:
-        """ Remove allocated IP blocks.
-        """
+        """Remove allocated IP blocks."""
         return self._ip_allocator.remove_ip_blocks(ipblocks, force)
 
     def list_added_ip_blocks(self) -> List[ip_network]:
-        """ List IP blocks added to the IP allocator
+        """List IP blocks added to the IP allocator
         Return:
              copy of the list of assigned IP blocks
         """
         return self._ip_allocator.list_added_ip_blocks()
 
     def list_allocated_ips(self, ipblock: ip_network) -> List[ip_address]:
-        """ List IP addresses allocated from a given IP block
-        """
+        """List IP addresses allocated from a given IP block"""
         return self._ip_allocator.list_allocated_ips(ipblock)
 
     def alloc_ip_address(self, sid: str, vlan_id: int) -> IPDesc:
-        """ Check if subscriber has static IP assigned.
+        """Check if subscriber has static IP assigned.
         If it is not allocated use IP allocator to assign an IP.
         """
         ip_desc = self._allocate_static_ip(sid)
@@ -105,7 +103,8 @@ class IPAllocatorStaticWrapper(IPAllocator):
             )
             ip_block_network = ip_network(ip_desc.ip_block)
             logging.debug(
-                "assigned blocks: %s remove: %s", self._store.assigned_ip_blocks,
+                "assigned blocks: %s remove: %s",
+                self._store.assigned_ip_blocks,
                 ip_block_network,
             )
             if ip_block_network in self._store.assigned_ip_blocks:
@@ -123,7 +122,8 @@ class IPAllocatorStaticWrapper(IPAllocator):
             return None
         logging.debug(
             "Found static IP: sid: %s ip_addr_info: %s",
-            sid, str(ip_addr_info),
+            sid,
+            str(ip_addr_info),
         )
         if ip_addr_info.ip.version != self._ip_version:
             logging.debug("IP version mismatch, expected version: %d", self._ip_version)
@@ -132,7 +132,8 @@ class IPAllocatorStaticWrapper(IPAllocator):
         for ip_pool in self._store.assigned_ip_blocks:
             if ip_addr_info.ip in ip_pool:
                 error_msg = "Static Ip {} Overlap with IP-POOL: {}".format(
-                    ip_addr_info.ip, ip_pool,
+                    ip_addr_info.ip,
+                    ip_pool,
                 )
                 logging.error(error_msg)
                 raise DuplicateIPAssignmentError(error_msg)
@@ -153,7 +154,10 @@ class IPAllocatorStaticWrapper(IPAllocator):
         ip_block = ip_network(ip_addr_info.ip)
         self._store.assigned_ip_blocks.add(ip_block)
         return IPDesc(
-            ip=ip_addr_info.ip, state=IPState.ALLOCATED,
-            sid=sid, ip_block=ip_block, ip_type=IPType.STATIC,
+            ip=ip_addr_info.ip,
+            state=IPState.ALLOCATED,
+            sid=sid,
+            ip_block=ip_block,
+            ip_type=IPType.STATIC,
             vlan_id=ip_addr_info.net_info.vlan,
         )
