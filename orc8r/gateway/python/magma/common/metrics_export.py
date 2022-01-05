@@ -14,7 +14,7 @@ limitations under the License.
 import logging
 import time
 
-import metrics_pb2
+import orc8r.protos.prometheus.metrics_pb2 as metrics_pb2
 from orc8r.protos import metricsd_pb2
 from prometheus_client import REGISTRY
 

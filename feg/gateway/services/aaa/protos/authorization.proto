@@ -13,7 +13,7 @@ limitations under the License.
 
 syntax = "proto3";
 
-import "context.proto";
+import "feg/gateway/services/aaa/protos/context.proto";
 
 package aaa.protos;
 option go_package = "magma/feg/gateway/services/aaa/protos";

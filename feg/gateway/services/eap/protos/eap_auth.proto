@@ -13,7 +13,7 @@ limitations under the License.
 
 syntax = "proto3";
 
-import "eap.proto";
+import "feg/gateway/services/aaa/protos/eap.proto";
 
 package eap;
 option go_package = "magma/feg/gateway/services/eap/protos";
