@@ -1,0 +1,27 @@
+[GLOBAL]
+pants_version = "2.8.0"
+backend_packages = [
+    "pants.backend.shell",
+    "pants.backend.codegen.protobuf.python",
+    "pants.backend.python",
+    "pants.backend.python.lint.black",
+]
+build_patterns = ["PANTSBUILD", "PANTSBUILD.*"]
+
+[tailor]
+build_file_name = "PANTSBUILD"
+
+[anonymous-telemetry]
+enabled = false
+
+[source]
+#root_patterns = [
+#    '/lte/gateway/python',
+#    '/orc8r/gateway/python',
+#]
+marker_filenames = ["setup.py"]
+
+[python-protobuf]
+# Use the path to the `python_requirement` targets,
+# e.g. `3rdparty/python:protobuf`.
+runtime_dependencies = ["//lte/gateway/python:grpcio", "//lte/gateway/python:protobuf"]
