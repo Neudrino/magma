@@ -96,7 +96,7 @@ class IpDescriptorMap:
         """
         assert state in IPState, "unknown state %s" % state
 
-        return bool(self.ip_states[state]) == False
+        return bool(self.ip_states[state]) is False
 
     def test_ip_state(self, ip: ip_address, state: IPState) -> bool:
         """check if IP is in state X"""
