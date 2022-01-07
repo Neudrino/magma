@@ -38,3 +38,8 @@ runtime_dependencies = [
     "//lte/protos/mconfig",
     "//orc8r/protos/mconfig",
 ]
+
+[test]
+#use_coverage = true
+[coverage-py]
+report = ["raw", "xml", "html", "json", "console"]
