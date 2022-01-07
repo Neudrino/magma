@@ -31,4 +31,10 @@ marker_filenames = ["setup.py"]
 [python-protobuf]
 # Use the path to the `python_requirement` targets,
 # e.g. `3rdparty/python:protobuf`.
-runtime_dependencies = ["//lte/gateway/python:grpcio", "//lte/gateway/python:protobuf"]
+runtime_dependencies = [
+    "//lte/gateway/python:grpcio",
+    "//lte/gateway/python:protobuf",
+    "//feg/protos/mconfig",
+    "//lte/protos/mconfig",
+    "//orc8r/protos/mconfig",
+]
