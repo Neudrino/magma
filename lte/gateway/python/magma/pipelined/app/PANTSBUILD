@@ -1,1 +1,9 @@
 python_sources()
+
+python_requirement(
+    name="pkt-tester-tests",
+    requirements=[
+        "ryu>=4.34",
+        "eventlet==0.30.2",
+    ],
+)

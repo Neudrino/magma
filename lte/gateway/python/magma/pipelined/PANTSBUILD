@@ -4,3 +4,13 @@ pex_binary(
 )
 
 python_sources()
+
+python_requirement(
+    name="requirements-pipelined",
+    requirements=[
+        "pycrypto>=2.6.1",
+        "aioeventlet",
+        "aiodns>=1.1.1",
+        "pymemoize>=1.0.2",
+    ],
+)

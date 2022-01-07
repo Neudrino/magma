@@ -18,3 +18,10 @@ pex_binary(
 python_tests(
     name="tests",
 )
+
+python_requirement(
+    name="pkt-tester-tests",
+    requirements=[
+        "cryptography>=1.9",
+    ],
+)

@@ -4,3 +4,10 @@ pex_binary(
 )
 
 python_sources()
+
+python_requirement(
+    name="requirements-redirectd",
+    requirements=[
+        "wsgiserver>=1.3",
+    ],
+)

@@ -4,3 +4,10 @@ pex_binary(
     name="ebpf_manager",
     entry_point="ebpf_manager.py",
 )
+
+python_requirement(
+    name="pkt-tester-tests",
+    requirements=[
+        "bcc==0.1.10",
+    ],
+)

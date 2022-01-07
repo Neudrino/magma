@@ -1,1 +1,8 @@
 python_sources()
+
+python_requirement(
+    name="requirements-qos",
+    requirements=[
+        "pyroute2==0.5.14",
+    ],
+)
