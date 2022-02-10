@@ -1,0 +1,30 @@
+---
+name: "000 Build Docker image"
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - experimental/bazel-base/Dockerfile
+      - .github/workflows/abcde-test.yml
+      - .github/workflows/composite/**
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_STREAM: ${{ github.repository }}/bazel-base
+  #IMAGE_TAGS: type=sha
+  DOCKERFILE: experimental/Dockerfile
+
+jobs:
+  build_dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/workflows/composite/docker-builder
+        with:
+          REGISTRY: ${{ env.REGISTRY }}
+          IMAGE_STREAM: ${{ env.IMAGE_STREAM }}
+          IMAGE_TAGS: ${{ env.IMAGE_TAGS }}
+          DOCKERFILE: ${{ env.DOCKERFILE }}
