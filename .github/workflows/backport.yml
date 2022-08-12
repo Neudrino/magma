@@ -17,10 +17,20 @@ jobs:
         github.event.action == 'closed'
         || (
           github.event.action == 'labeled'
-          && contains(github.event.label.name, 'backport')
+          && contains(github.event.label.name, 'apply-')
         )
       )
     steps:
-      - uses: tibdex/backport@v2
+      - name: Backport Action
+        uses: sqren/backport-github-action@v8.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          auto_backport_label_prefix: apply-
+
+      - name: Info log
+        if: ${{ success() }}
+        run: cat /home/runner/.backport/backport.info.log
+
+      - name: Debug log
+        if: ${{ failure() }}
+        run: cat /home/runner/.backport/backport.debug.log
