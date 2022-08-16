@@ -7,13 +7,6 @@ on:
       - labeled
 
 jobs:
-  debug-output:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ join(github.event.pull_request.labels.*.name, ', ') }}"
-      - run: echo "${{ contains(join(github.event.pull_request.labels.*.name, ', '), 'apply-') }}"
-      - run: echo "${{ toJSON(github.event.pull_request.labels.*.name) }}"
-
   # Only react to merged PRs for security reasons.
   # See https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target.
   # The label prefix needs to be inlined here due to the unavailability of `env` within the `if` block.
