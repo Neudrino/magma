@@ -20,7 +20,7 @@ jobs:
     needs: set-blp
     steps:
       - run: echo "${{ needs.set-blp.outputs.backport_label_prefix }}"
-      - run: echo "${{ join(github.event.issue.labels.*.name, ', ') }}"
+      - run: echo "${{ join(github.event.pull_request.labels.*.name, ', ') }}"
       - run: >
           echo "${{ contains(
             join(github.event.issue.labels.*.name, ', '),
@@ -36,7 +36,7 @@ jobs:
     if: >
       github.event.pull_request.merged
       && contains(
-        join(github.event.issue.labels.*.name, ', '),
+        join(github.event.pull_request.labels.*.name, ', '),
         needs.set-blp.outputs.backport_label_prefix
       )
       && (
