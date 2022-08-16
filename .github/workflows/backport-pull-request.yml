@@ -7,46 +7,28 @@ on:
       - labeled
 
 jobs:
-  # This is a workaround due to the unavailability of `env` within the `if` block.
-  # https://github.com/actions/runner/issues/1189
-  set-blp:
-    runs-on: ubuntu-latest
-    outputs:
-      backport_label_prefix: apply-
-    steps:
-      - run: echo "Workaround job for https://github.com/actions/runner/issues/1189."
   debug-output:
     runs-on: ubuntu-latest
-    needs: set-blp
     steps:
-      - run: echo "${{ needs.set-blp.outputs.backport_label_prefix }}"
       - run: echo "${{ join(github.event.pull_request.labels.*.name, ', ') }}"
-      - run: >
-          echo "${{ contains(
-            join(github.event.issue.labels.*.name, ', '),
-            needs.set-blp.outputs.backport_label_prefix
-          ) }}"
-      - run: echo "${{ toJSON(github.event) }}"
+      - run: echo "${{ contains(join(github.event.pull_request.labels.*.name, ', '), 'apply-') }}"
+      - run: echo "${{ toJSON(github.event.pull_request.labels.*.name) }}"
+
+  # Only react to merged PRs for security reasons.
+  # See https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target.
+  # The label prefix needs to be inlined here due to the unavailability of `env` within the `if` block.
+  # https://github.com/actions/runner/issues/1189
   backport:
     name: Backport
     runs-on: ubuntu-latest
-    needs: set-blp
-    # Only react to merged PRs for security reasons.
-    # See https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target.
     if: >
       github.event.pull_request.merged
-      && contains(
-        join(github.event.pull_request.labels.*.name, ', '),
-        needs.set-blp.outputs.backport_label_prefix
-      )
+      && contains(join(github.event.pull_request.labels.*.name, ', '), 'apply-')
       && (
         github.event.action == 'closed'
         || (
           github.event.action == 'labeled'
-          && contains(
-            github.event.label.name,
-            needs.set-blp.outputs.backport_label_prefix
-          )
+          && contains(github.event.label.name, 'apply-')
         )
       )
     steps:
@@ -54,7 +36,7 @@ jobs:
         uses: sqren/backport-github-action@f54e19901f2a57f8b82360f2490d47ee82ec82c6 # pin@v8.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          auto_backport_label_prefix: ${{ needs.set-blp.outputs.backport_label_prefix }}
+          auto_backport_label_prefix: apply-
 
       - name: Info log
         if: ${{ success() }}
