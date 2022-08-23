@@ -11,10 +11,8 @@ jobs:
         run: |
           cd lte/gateway/docker
           docker buildx create --name arm64-builder --use
-          docker buildx bake \
+          BUILDKIT_INLINE_CACHE=1 CPU_ARCH=aarch64 DEB_PORT=arm64 docker buildx bake \
             -f docker-compose.yaml \
             -f docker-compose.override.yaml \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            --build-arg CPU_ARCH=aarch64 \
-            --build-arg DEB_PORT=arm64 \
+            --set target.platform=linux/arm64 \
             --load
