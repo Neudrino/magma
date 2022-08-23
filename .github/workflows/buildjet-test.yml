@@ -7,3 +7,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: uname -a
+      - name: Create Image
+        run: |
+          cd lte/gateway/docker
+          docker buildx create --name arm64-builder --use
+          docker buildx build --platform linux/arm64 \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --build-arg CPU_ARCH=aarch64 \
+            --build-arg DEB_PORT=arm64 \
+            -t ${SNUBA_IMAGE}:latest \
+            -t ${SNUBA_IMAGE}:${{ steps.branch.outputs.branch }} \
+            -t ${SNUBA_IMAGE}:${{ github.sha }} \
+            --load .
