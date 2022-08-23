@@ -14,7 +14,6 @@ jobs:
           docker buildx bake \
             -f docker-compose.yaml \
             -f docker-compose.override.yaml \
-            --platform linux/arm64 \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             --build-arg CPU_ARCH=aarch64 \
             --build-arg DEB_PORT=arm64 \
