@@ -9,6 +9,7 @@
     "ssh_password": "packer",
     "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
     "headless": true,
+    "nested_virt": false,
     "vboxmanage": [
         [ "startvm", "{{.Name}}", "--type", "headless" ],
         [ "modifyvm", "{{.Name}}", "--hwvirtex", "off" ],
