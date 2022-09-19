@@ -7,7 +7,10 @@
     "iso_checksum": "md5:769474248a3897f4865817446f9a4a53",
     "ssh_username": "packer",
     "ssh_password": "packer",
-    "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+    "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--type", "headless" ]
+      ]
     }
   ]
 }
