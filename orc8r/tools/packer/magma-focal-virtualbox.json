@@ -43,6 +43,7 @@
       "ssh_timeout": "64206s",
       "ssh_username": "vagrant",
       "type": "virtualbox-iso",
+      "nested_virt": false,
       "vboxmanage": [
         [
           "modifyvm",
