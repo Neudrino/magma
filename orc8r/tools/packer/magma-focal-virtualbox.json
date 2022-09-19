@@ -43,20 +43,11 @@
       "ssh_timeout": "64206s",
       "ssh_username": "vagrant",
       "type": "virtualbox-iso",
-      "nested_virt": false,
       "vboxmanage": [
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "8192"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "4"
-        ]
+        [ "modifyvm", "{{.Name}}", "--memory", "8192" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "4" ],
+        [ "modifyvm", "{{.Name}}", "--hwvirtex", "off" ],
+        [ "modifyvm", "{{.Name}}", "--vtxvpid", "off" ]
       ],
       "virtualbox_version_file": ".vbox_version",
       "vm_name": "magma-dev"
