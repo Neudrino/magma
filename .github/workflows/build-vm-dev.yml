@@ -38,4 +38,4 @@ jobs:
       - name: Build Virtualbox image with Packer
         run: |
           cd orc8r/tools/packer
-          packer build magma-focal-virtualbox.json
+          packer build test.json
