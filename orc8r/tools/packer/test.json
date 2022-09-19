@@ -8,8 +8,11 @@
     "ssh_username": "packer",
     "ssh_password": "packer",
     "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+    "headless": true,
     "vboxmanage": [
-        [ "startvm", "{{.Name}}", "--type", "headless" ]
+        [ "startvm", "{{.Name}}", "--type", "headless" ],
+        [ "modifyvm", "{{.Name}}", "--hwvirtex", "off" ],
+        [ "modifyvm", "{{.Name}}", "--vtxvpid", "off" ]
       ]
     }
   ]
