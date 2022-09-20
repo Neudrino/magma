@@ -27,7 +27,7 @@ jobs:
         run: packer validate -syntax-only test.json
         working-directory: orc8r/tools/packer
       - name: Packer build
-        run: packer build -color=false -on-error=abort test.json
+        run: packer build -on-error=abort test.json
         working-directory: orc8r/tools/packer
 
       - name: Fix Template
