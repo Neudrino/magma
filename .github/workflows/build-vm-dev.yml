@@ -17,7 +17,7 @@ on:
   push: null
 
 jobs:
-  prepare-build:
+  packer:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
@@ -26,6 +26,8 @@ jobs:
         uses: hashicorp/packer-github-actions@master
         with:
           command: fix
+          target: test.json
+          working_directory: orc8r/tools/packer
 
       - name: Validate Template
         uses: hashicorp/packer-github-actions@master
