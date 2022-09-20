@@ -23,6 +23,13 @@ jobs:
 
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
+      - run: |
+          cat << EOF > file.txt
+          The current working directory is: $PWD
+          You are logged in as: $(whoami)
+          EOF
+          cat file.txt
+
       - name: Packer validate
         run: packer validate -syntax-only test.json
         working-directory: orc8r/tools/packer
