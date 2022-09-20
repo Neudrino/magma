@@ -12,8 +12,8 @@
     "nested_virt": false,
     "vboxmanage": [
         [ "modifyvm", "{{.Name}}", "--hwvirtex", "off" ],
-        [ "modifyvm", "{{.Name}}", "--vtxvpid", "off" ]
-        [ "startvm", "{{.Name}}", "--type", "headless" ],
+        [ "modifyvm", "{{.Name}}", "--vtxvpid", "off" ],
+        [ "startvm", "{{.Name}}", "--type", "headless" ]
       ]
     }
   ]
