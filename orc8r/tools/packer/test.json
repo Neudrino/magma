@@ -8,6 +8,7 @@
     "ssh_username": "packer",
     "ssh_password": "packer",
     "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+    "post_shutdown_delay": "2m",
     "headless": true,
     "vboxmanage": [
         [ "startvm", "{{.Name}}", "--type", "headless" ]
