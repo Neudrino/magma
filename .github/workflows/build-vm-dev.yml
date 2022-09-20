@@ -17,7 +17,7 @@ on:
   push: null
 
 jobs:
-  packer:
+  packer-native:
     runs-on: macos-12
     steps:
 
@@ -42,36 +42,47 @@ jobs:
             ]
           }
 
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
-
       - name: Packer validate
-        run: packer validate -syntax-only test.json
-        working-directory: orc8r/tools/packer
+        run: packer validate -syntax-only packer.json
       - name: Packer build
-        run: packer build -on-error=abort test.json
-        working-directory: orc8r/tools/packer
+        run: packer build -on-error=abort packer.json
 
-      - name: Fix Template
-        uses: hashicorp/packer-github-actions@master
-        with:
-          command: fix
-          target: test.json
-          working_directory: orc8r/tools/packer
+  packer-action:
+    runs-on: macos-12
+    steps:
+
+      - run: |
+          tee packer.json << EOF
+          {
+            "builders": [
+              {
+              "type": "virtualbox-iso",
+              "guest_os_type": "Ubuntu_64",
+              "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.5-server-amd64.iso",
+              "iso_checksum": "md5:769474248a3897f4865817446f9a4a53",
+              "ssh_username": "packer",
+              "ssh_password": "packer",
+              "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+              "post_shutdown_delay": "2m",
+              "headless": true,
+              "vboxmanage": [
+                  [ "startvm", "{{.Name}}", "--type", "headless" ]
+                ]
+              }
+            ]
+          }
 
       - name: Validate Template
         uses: hashicorp/packer-github-actions@master
         with:
           command: validate
           arguments: -syntax-only
-          target: test.json
-          working_directory: orc8r/tools/packer
-
+          target: packer.json
       - name: Build Artifact
         uses: hashicorp/packer-github-actions@master
         with:
           command: build
           arguments: "-on-error=abort"
-          target: test.json
-          working_directory: orc8r/tools/packer
+          target: packer.json
         env:
           PACKER_LOG: 1
