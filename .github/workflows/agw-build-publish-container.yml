@@ -58,8 +58,8 @@ jobs:
             DOCKER_FILE: feg/gateway/docker/go/Dockerfile
           - DOCKER_IMAGE: agw_gateway_python
             DOCKER_FILE: lte/gateway/docker/services/python/Dockerfile
-          - DOCKER_IMAGE: agw_gateway_c
-            DOCKER_FILE: lte/gateway/docker/services/c/Dockerfile
+#          - DOCKER_IMAGE: agw_gateway_c
+#            DOCKER_FILE: lte/gateway/docker/services/c/Dockerfile
 
     steps:
       - run: echo "DOCKER_REGISTRY=agw-test.artifactory.magmacore.org" >> $GITHUB_ENV
