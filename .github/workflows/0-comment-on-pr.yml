@@ -1,0 +1,27 @@
+name: Link to Jira ticket
+
+on:
+  pull_request: null
+#    types:
+#      - opened
+#      - edited
+#      - reopened
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  comment-jira-link:
+    runs-on: ubuntu-latest
+    if: ${{ ! startsWith(github.event.pull_request.title, 'Revert ') }}
+    steps:
+      - #if: contains(github.event.pull_request.head.ref, '/')
+        run: |
+          ticket="${${{ github.event.pull_request.head.ref }}%%/*}"
+          echo "${ticket}"
+          echo "jira-ticket=${ticket^^}" >> $GITHUB_ENV
+      - run: |
+          echo "# ${{ toJSON(github.event) }}"
+          echo "## ${{ toJSON(github.event.ref) }}"
+          echo "### ${{ toJSON(github.event.pull_request.head.ref) }}"
