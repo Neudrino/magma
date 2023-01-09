@@ -1,0 +1,45 @@
+name: Link to Jira ticket
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  body-signature: "Also see **Jira** ticket"
+
+jobs:
+  comment-jira-link:
+    runs-on: ubuntu-latest
+    if: ${{ ! startsWith(github.event.pull_request.title, 'Revert ') }}
+    steps:
+
+      - if: contains(github.event.pull_request.head.ref, '/')
+        run: |
+          ticket=$(echo "${{ github.event.pull_request.head.ref }}" | cut -d'/' -f 1)
+          echo "jira-ticket=${ticket^^}" >> $GITHUB_ENV
+
+      - if: ${{ ! contains(github.event.pull_request.head.ref, '/')}}
+        run: |
+          ticket=$(echo "${{ github.event.pull_request.head.ref }}" | cut -d'-' -f -2)
+          echo "jira-ticket=${ticket^^}" >> $GITHUB_ENV
+
+      - uses: peter-evans/find-comment@v2
+        id: fc
+        with:
+          issue-number: ${{ github.event.number }}
+          body-includes: ${{ env.body-signature }}
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ${{ env.body-signature }} **[${{ env.jira-ticket }}](https://yaradigitalfarming.atlassian.net/browse/${{ env.jira-ticket }})**.
